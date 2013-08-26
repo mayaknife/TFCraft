@@ -109,7 +109,7 @@ public class WorldGenForests implements IWorldGenerator
 			WorldGenerator gen0 = TFCBiome.getTreeGen(TreeType0, random.nextBoolean());
 			WorldGenerator gen1 = TFCBiome.getTreeGen(TreeType1, random.nextBoolean());
 			WorldGenerator gen2 = TFCBiome.getTreeGen(TreeType2, random.nextBoolean());
-			float temperature = TFC_Climate.getBioTemperatureHeight(xCoord, world.getHeightValue(xCoord, zCoord), zCoord);
+			float temperature = TFC_Climate.getBioTemperatureHeight(xCoord, yCoord, zCoord);
 			float temperatureAvg = TFC_Climate.getBioTemperature(xCoord, zCoord);
 
 			if(getNearWater(world, xCoord, yCoord, zCoord))

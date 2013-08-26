@@ -41,7 +41,7 @@ import net.minecraft.world.gen.feature.*;
 
 public class WorldGenCustomHugeTrees extends WorldGenerator
 {
-	private final int field_48195_a;
+	private int field_48195_a;
 
 	/** Sets the metadata for the wood blocks used */
 	private final int woodMetadata;
@@ -265,5 +265,10 @@ public class WorldGenCustomHugeTrees extends WorldGenerator
 		{
 			return false;
 		}
+	}
+
+	public void setBaseHeight(int newHeight)
+	{
+		this.field_48195_a = newHeight;
 	}
 }

@@ -49,37 +49,41 @@ public class WorldGenCustomSand extends WorldGenerator
         this.radius = par1;
     }
 
-    public boolean generate(World world, Random par2Random, int par3, int par4, int par5)
+    public boolean generate(World world, Random par2Random, int blockX, int blockY, int blockZ)
     {
-        if (world.getBlockMaterial(par3, par4, par5) != Material.water)
+        if (world.getBlockMaterial(blockX, blockY, blockZ) != Material.water)
         {
             return false;
         }
         else
         {
         	
-        	int meta = sandID = ((TFCWorldChunkManager)world.provider.worldChunkMgr).getRockLayerAt(par3, par5, 0).data2;
+        	int meta = sandID = ((TFCWorldChunkManager)world.provider.worldChunkMgr).getRockLayerAt(blockX, blockZ, 0).data2;
         	sandID = TFC_Core.getTypeForSand(sandID);
-            int var6 = par2Random.nextInt(this.radius - 2) + 2;
+            int finalRadius = par2Random.nextInt(this.radius - 2) + 2;
+			int radiusSquared = finalRadius * finalRadius;
             byte var7 = 2;
 
-            for (int var8 = par3 - var6; var8 <= par3 + var6; ++var8)
+            for (int x = blockX - finalRadius; x <= blockX + finalRadius; ++x)
             {
-                for (int var9 = par5 - var6; var9 <= par5 + var6; ++var9)
+                int dx = x - blockX;
+				int dxSquared = dx * dx;
+
+                for (int z = blockZ - finalRadius; z <= blockZ + finalRadius; ++z)
                 {
-                    int var10 = var8 - par3;
-                    int var11 = var9 - par5;
+                    int dz = z - blockZ;
+					int dzSquared = dz * dz;
 
-                    if (var10 * var10 + var11 * var11 <= var6 * var6)
+                    if (dxSquared + dzSquared <= radiusSquared)
                     {
-                        for (int var12 = par4 - var7; var12 <= par4 + var7; ++var12)
+                        for (int y = blockY - var7; y <= blockY + var7; ++y)
                         {
-                            int var13 = world.getBlockId(var8, var12, var9);
+                            int id = world.getBlockId(x, y, z);
 
-                            boolean notCorrectSoil = !TFC_Core.isSoil(var13) && !TFC_Core.isSand(var13) ;
+                            boolean notCorrectSoil = !TFC_Core.isSoil(id) && !TFC_Core.isSand(id) ;
                             if (!notCorrectSoil)
                             {
-                                world.setBlock(var8, var12, var9, sandID, meta, 0x2);
+                                world.setBlock(x, y, z, sandID, meta, 0x2);
                             }
                         }
                     }

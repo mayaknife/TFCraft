@@ -176,9 +176,9 @@ public class WorldGenLargeRock implements IWorldGenerator
 						canPlaceX = false;
 					if(xCoord > i && distance > xWidth2 * 4)
 						canPlaceX = false;
-					if(zCoord < i && distance > zWidth * 4)
+					if(zCoord < k && distance > zWidth * 4)
 						canPlaceZ = false;
-					if(zCoord > i && distance > zWidth2 * 4)
+					if(zCoord > k && distance > zWidth2 * 4)
 						canPlaceZ = false;
 					
 					if(rand.nextInt(10)+1 != 0 && canPlaceX && canPlaceZ)

@@ -188,13 +188,13 @@ public class WorldGenMinableTFC extends WorldGenerator
                         if(directionZ2 == 1 && directionChange2 != 2){posZ2 = posZ2 - rand.nextInt(2);}
 
 
-                        int m = world.getBlockMetadata(posX, posY, posZ);
-                        boolean isCorrectRockType = world.getBlockId(posX, posY, posZ) == LayerID;
+                        int m = world.getBlockMetadata(posX2, posY2, posZ2);
+                        boolean isCorrectRockType = world.getBlockId(posX2, posY2, posZ2) == LayerID;
                         boolean isCorrectMeta = (m == LayerMeta || LayerMeta == -1);
 
                         if(isCorrectRockType && isCorrectMeta)
                         {
-                            world.setBlock(posX, posY, posZ, MPBlockID, MPBlockMeta, 0x2);
+                            world.setBlock(posX2, posY2, posZ2, MPBlockID, MPBlockMeta, 0x2);
                         }
 
                         blocksMade++;

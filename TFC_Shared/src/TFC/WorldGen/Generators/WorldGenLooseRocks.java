@@ -47,15 +47,24 @@ public class WorldGenLooseRocks implements IWorldGenerator
 
 	}
 
-	private boolean generate(World world, Random random, int var8, int var9, int var10)
+	private boolean generate(World world, Random random, int x, int y, int z)
 	{
-		if ((world.isAirBlock(var8, var9+1, var10) || world.getBlockId(var8, var9+1, var10) == Block.snow.blockID || 
-				world.getBlockId(var8, var9+1, var10) == Block.tallGrass.blockID) && 
-				(world.getBlockMaterial(var8, var9, var10) == Material.grass || 
-				world.getBlockMaterial(var8, var9, var10) == Material.rock) && world.isBlockOpaqueCube(var8, var9, var10))
-		{
-			world.setBlock(var8, var9+1, var10, TFCBlocks.LooseRock.blockID, 0, 0x2);
+		boolean isAir = world.isAirBlock(x, y+1, z);
 
+		//	This is just to avoid the getBlockId call if we already know
+		//	that it's air.
+		//
+		int id = (isAir ? -1 : world.getBlockId(x, y+1, z));
+
+		if (isAir || id == Block.snow.blockID || id == Block.tallGrass.blockID)
+		{
+			Material mat = world.getBlockMaterial(x, y, z);
+
+			if ((mat == Material.grass || mat == Material.rock)
+			&&	world.isBlockOpaqueCube(x, y, z))
+			{
+				world.setBlock(x, y+1, z, TFCBlocks.LooseRock.blockID, 0, 0x2);
+			}
 		}
 
 		return true;

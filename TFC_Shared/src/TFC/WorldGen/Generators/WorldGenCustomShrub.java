@@ -45,39 +45,37 @@ public class WorldGenCustomShrub extends WorldGenerator
 		this.field_48197_a = par2;
 	}
 
-	public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
+	public boolean generate(World world, Random random, int blockX, int blockY, int blockZ)
 	{
-		int var15;
+		int id;
 
-		for (boolean var6 = false; ((var15 = par1World.getBlockId(par3, par4, par5)) == 0 || var15 == Block.leaves.blockID) && par4 > 0; --par4)
+		for (boolean var6 = false; ((id = world.getBlockId(blockX, blockY, blockZ)) == 0 || id == Block.leaves.blockID) && blockY > 0; --blockY)
 		{
 			;
 		}
 
-		int var7 = par1World.getBlockId(par3, par4, par5);
-
-		if (var7 == TFCBlocks.Dirt.blockID || var7 == TFCBlocks.Dirt2.blockID ||var7 == TFCBlocks.Grass.blockID ||var7 == TFCBlocks.Grass2.blockID ||
-				var7 == TFCBlocks.ClayGrass.blockID ||var7 == TFCBlocks.ClayGrass2.blockID)
+		if (id == TFCBlocks.Dirt.blockID || id == TFCBlocks.Dirt2.blockID ||id == TFCBlocks.Grass.blockID ||id == TFCBlocks.Grass2.blockID ||
+				id == TFCBlocks.ClayGrass.blockID ||id == TFCBlocks.ClayGrass2.blockID)
 		{
-			++par4;
-			par1World.setBlock(par3, par4, par5, Block.wood.blockID, this.field_48196_b, 0x2);
+			++blockY;
+			world.setBlock(blockX, blockY, blockZ, Block.wood.blockID, this.field_48196_b, 0x2);
 
-			for (int var8 = par4; var8 <= par4 + 2; ++var8)
+			for (int y = blockY; y <= blockY + 2; ++y)
 			{
-				int var9 = var8 - par4;
-				int var10 = 2 - var9;
+				int dy = y - blockY;
+				int var10 = 2 - dy;
 
-				for (int var11 = par3 - var10; var11 <= par3 + var10; ++var11)
+				for (int x = blockX - var10; x <= blockX + var10; ++x)
 				{
-					int var12 = var11 - par3;
+					int dx = x - blockX;
 
-					for (int var13 = par5 - var10; var13 <= par5 + var10; ++var13)
+					for (int z = blockZ - var10; z <= blockZ + var10; ++z)
 					{
-						int var14 = var13 - par5;
+						int dz = z - blockZ;
 
-						if ((Math.abs(var12) != var10 || Math.abs(var14) != var10 || par2Random.nextInt(2) != 0) && !Block.opaqueCubeLookup[par1World.getBlockId(var11, var8, var13)])
+						if ((Math.abs(dx) != var10 || Math.abs(dz) != var10 || random.nextInt(2) != 0) && !Block.opaqueCubeLookup[world.getBlockId(x, y, z)])
 						{
-							this.setBlockAndMetadata(par1World, var11, var8, var13, Block.leaves.blockID, this.field_48196_b);
+							this.setBlockAndMetadata(world, x, y, z, Block.leaves.blockID, this.field_48196_b);
 						}
 					}
 				}

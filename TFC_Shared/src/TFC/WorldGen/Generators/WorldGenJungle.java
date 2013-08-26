@@ -49,9 +49,17 @@ public class WorldGenJungle
 {
 	/** The number of blocks to generate. */
 	private int numberOfBlocks;
+	private WorldGenCustomHugeTrees hugeTreeGen;
+	private WorldGenCustomShortTrees shortTreeGen;
+	private WorldGenCustomShrub shrubGen;
+	private WorldGenCustomVines vineGen;
 
 	public WorldGenJungle()
 	{
+		hugeTreeGen = new WorldGenCustomHugeTrees(false, 0, 15, 15);
+		shortTreeGen = new WorldGenCustomShortTrees(false, 15);
+		shrubGen = new WorldGenCustomShrub(15, 15);
+		vineGen = new WorldGenCustomVines();
 	}
 
 
@@ -86,7 +94,7 @@ public class WorldGenJungle
 			
 			
 			DataLayer EVT = ((TFCWorldChunkManager)world.provider.worldChunkMgr).getEVTLayerAt(xCoord, zCoord);
-			float temperature = TFC_Climate.getBioTemperatureHeight(xCoord, world.getHeightValue(xCoord, zCoord), zCoord);
+			float temperature = TFC_Climate.getBioTemperatureHeight(xCoord, yCoord, zCoord);
 			float temperatureAvg = TFC_Climate.getBioTemperature(xCoord, zCoord);
 
 			try
@@ -99,8 +107,21 @@ public class WorldGenJungle
 //					WorldGenerator gen0 = (WorldGenerator)(random.nextInt(10) == 0 ? new WorldGenCustomShortTrees(false,15) : random.nextInt(2) == 0 ? new WorldGenCustomShrub(15, 15) : 
 //						random.nextInt(3) == 0 ? new WorldGenCustomHugeTrees(false, 10 + random.nextInt(20), 15, 15) : new WorldGenCustomShortTrees(false, 15));
 					
-					WorldGenerator gen0 = (WorldGenerator)( (random.nextInt(2) == 0 ? new WorldGenCustomShrub(15, 15) : 
-						(random.nextInt(3) == 0 ? new WorldGenCustomHugeTrees(false, 10 + random.nextInt(20), 15, 15) : new WorldGenCustomShortTrees(false, 15))));
+					WorldGenerator gen0;
+					
+					if (random.nextInt(2) == 0)
+					{
+						gen0 = shrubGen;
+					}
+					else if (random.nextInt(3) == 0)
+					{
+						hugeTreeGen.setBaseHeight(10 + random.nextInt(20));
+						gen0 = hugeTreeGen;
+					}
+					else
+					{
+						gen0 = shortTreeGen;
+					}
 
 					gen0.setScale(1.0D, 1.0D, 1.0D);
 					gen0.generate(world, random, xCoord, yCoord, zCoord);
@@ -114,14 +135,12 @@ public class WorldGenJungle
 		}
 		if(completed)
 		{
-			WorldGenCustomVines var5 = new WorldGenCustomVines();
-
 	        for (int var6 = 0; var6 < 50; ++var6)
 	        {
 	            int var7 = chunkX + random.nextInt(16);
 	            int var8 = 145;
 	            int var9 = chunkZ + random.nextInt(16);
-	            var5.generate(world, random, var7, var8, var9);
+	            vineGen.generate(world, random, var7, var8, var9);
 	        }
 		}
 		return completed;

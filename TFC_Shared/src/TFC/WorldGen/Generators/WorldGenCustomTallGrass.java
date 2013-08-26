@@ -48,24 +48,24 @@ public class WorldGenCustomTallGrass extends WorldGenerator
 		this.tallGrassMetadata = par2;
 	}
 
-	public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
+	public boolean generate(World world, Random random, int blockX, int blockY, int blockZ)
 	{
-		int var11;
+		int id  = world.getBlockId(blockX, blockY, blockZ);
 
-		for (boolean var6 = false; ((var11 = par1World.getBlockId(par3, par4, par5)) == 0 || var11 == Block.leaves.blockID) && par4 > 0; --par4)
+		for (boolean var6 = false; ((id = world.getBlockId(blockX, blockY, blockZ)) == 0 || id == Block.leaves.blockID) && blockY > 0; --blockY)
 		{
 			;
 		}
 
-		for (int var7 = 0; var7 < 128; ++var7)
+		for (int y = 0; y < 128; ++y)
 		{
-			int var8 = par3 + par2Random.nextInt(8) - par2Random.nextInt(8);
-			int var9 = par4 + par2Random.nextInt(4) - par2Random.nextInt(4);
-			int var10 = par5 + par2Random.nextInt(8) - par2Random.nextInt(8);
+			int var8 = blockX + random.nextInt(8) - random.nextInt(8);
+			int var9 = blockY + random.nextInt(4) - random.nextInt(4);
+			int var10 = blockZ + random.nextInt(8) - random.nextInt(8);
 
-			if (par1World.isAirBlock(var8, var9, var10) && ((BlockCustomTallGrass)Block.blocksList[this.tallGrassID]).canBlockStay(par1World, var8, var9, var10))
+			if (world.isAirBlock(var8, var9, var10) && ((BlockCustomTallGrass)Block.blocksList[this.tallGrassID]).canBlockStay(world, var8, var9, var10))
 			{
-				par1World.setBlock(var8, var9, var10, this.tallGrassID, this.tallGrassMetadata, 0x2);
+				world.setBlock(var8, var9, var10, this.tallGrassID, this.tallGrassMetadata, 0x2);
 			}
 		}
 

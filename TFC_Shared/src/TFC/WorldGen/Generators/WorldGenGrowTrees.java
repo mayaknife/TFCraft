@@ -25,8 +25,8 @@ public class WorldGenGrowTrees
 			{
 				for(int z = -7; z < 8 && hasSpaceToGrow; z++)
 				{
-					if(world.getBlockId(xCoord + x, yCoord + y, zCoord + z) == TFCBlocks.Wood.blockID || 
-							world.getBlockId(xCoord + x, yCoord + y, zCoord + z) == TFCBlocks.Sapling.blockID)
+					int id = world.getBlockId(xCoord + x, yCoord + y, zCoord + z);
+					if(id == TFCBlocks.Wood.blockID || id == TFCBlocks.Sapling.blockID)
 					{
 						hasSpaceToGrow = false;
 					}
@@ -39,14 +39,14 @@ public class WorldGenGrowTrees
 			float rainfall = TFC_Climate.getRainfall(xCoord, yCoord, zCoord);
 			float temperature = TFC_Climate.getBioTemperatureHeight(xCoord, yCoord, zCoord);
 			float evt = TFC_Climate.manager.getEVTLayerAt(xCoord, zCoord).floatdata1;
-			
+			int temp = TreeType2;
 
-			if(TreeType0 < 0 || TreeType0 > 15)
-				TreeType0 = TFC_Climate.getTreeLayer(xCoord, yCoord, zCoord, 2);
-			if(TreeType1 < 0 || TreeType1 > 15)
-				TreeType1 = TFC_Climate.getTreeLayer(xCoord, yCoord, zCoord, 0);
 			if(TreeType2 < 0 || TreeType2 > 15)
-				TreeType2 = TFC_Climate.getTreeLayer(xCoord, yCoord, zCoord, 1);
+				TreeType2 = TreeType1;
+			if(TreeType1 < 0 || TreeType1 > 15)
+				TreeType1 = TreeType0;
+			if(TreeType0 < 0 || TreeType0 > 15)
+				TreeType0 = temp;
 			
 			/**
 			 * If the block is near a water source then we want rainfall to count for twice as much 

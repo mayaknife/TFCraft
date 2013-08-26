@@ -44,42 +44,62 @@ public class WorldGenLiquidsTFC extends WorldGenerator
 
 	public boolean generate(World world, Random random, int i, int j, int k)
 	{
-		if (world.getBlockId(i, j + 1, k) != TFCBlocks.StoneIgIn.blockID && world.getBlockId(i, j + 1, k) != TFCBlocks.StoneSed.blockID &&
-				world.getBlockId(i, j + 1, k) != TFCBlocks.StoneIgEx.blockID &&world.getBlockId(i, j + 1, k) != TFCBlocks.StoneMM.blockID)
+		int id = world.getBlockId(i, j + 1, k);
+
+		if (id != TFCBlocks.StoneIgIn.blockID && id != TFCBlocks.StoneSed.blockID &&
+			id != TFCBlocks.StoneIgEx.blockID && id != TFCBlocks.StoneMM.blockID)
 		{
 			return false;
 		}
-		if (world.getBlockId(i, j - 1, k) != TFCBlocks.StoneIgIn.blockID && world.getBlockId(i, j - 1, k) != TFCBlocks.StoneSed.blockID &&
-				world.getBlockId(i, j - 1, k) != TFCBlocks.StoneIgEx.blockID &&world.getBlockId(i, j - 1, k) != TFCBlocks.StoneMM.blockID)
+
+		id = world.getBlockId(i, j - 1, k);
+
+		if (id != TFCBlocks.StoneIgIn.blockID && id != TFCBlocks.StoneSed.blockID &&
+			id != TFCBlocks.StoneIgEx.blockID && id != TFCBlocks.StoneMM.blockID)
 		{
 			return false;
 		}
-		if (world.getBlockId(i, j, k) != 0 && world.getBlockId(i, j, k) != TFCBlocks.StoneIgIn.blockID && world.getBlockId(i, j, k) != TFCBlocks.StoneSed.blockID &&
-				world.getBlockId(i, j, k) != TFCBlocks.StoneIgEx.blockID &&world.getBlockId(i, j, k) != TFCBlocks.StoneMM.blockID)
+
+		id = world.getBlockId(i, j, k);
+
+		if (id != 0 && id != TFCBlocks.StoneIgIn.blockID && id != TFCBlocks.StoneSed.blockID &&
+			id != TFCBlocks.StoneIgEx.blockID && id != TFCBlocks.StoneMM.blockID)
 		{
 			return false;
 		}
+
 		int l = 0;
-		if (world.getBlockId(i - 1, j, k) == TFCBlocks.StoneIgIn.blockID && world.getBlockId(i - 1, j, k) == TFCBlocks.StoneSed.blockID &&
-				world.getBlockId(i - 1, j, k) == TFCBlocks.StoneIgEx.blockID &&world.getBlockId(i - 1, j, k) == TFCBlocks.StoneMM.blockID)
+		id = world.getBlockId(i - 1, j, k);
+
+		if (id == TFCBlocks.StoneIgIn.blockID && id == TFCBlocks.StoneSed.blockID &&
+			id == TFCBlocks.StoneIgEx.blockID && id == TFCBlocks.StoneMM.blockID)
 		{
 			l++;
 		}
-		if (world.getBlockId(i + 1, j, k) == TFCBlocks.StoneIgIn.blockID && world.getBlockId(i + 1, j, k) == TFCBlocks.StoneSed.blockID &&
-				world.getBlockId(i + 1, j, k) == TFCBlocks.StoneIgEx.blockID &&world.getBlockId(i + 1, j, k) == TFCBlocks.StoneMM.blockID)
+
+		id = world.getBlockId(i + 1, j, k);
+		if (id == TFCBlocks.StoneIgIn.blockID && id == TFCBlocks.StoneSed.blockID &&
+			id == TFCBlocks.StoneIgEx.blockID && id == TFCBlocks.StoneMM.blockID)
 		{
 			l++;
 		}
-		if (world.getBlockId(i, j, k - 1) == TFCBlocks.StoneIgIn.blockID && world.getBlockId(i, j, k - 1) == TFCBlocks.StoneSed.blockID &&
-				world.getBlockId(i, j, k - 1) == TFCBlocks.StoneIgEx.blockID &&world.getBlockId(i, j, k - 1) == TFCBlocks.StoneMM.blockID)
+
+		id = world.getBlockId(i, j, k - 1);
+
+		if (id == TFCBlocks.StoneIgIn.blockID && id == TFCBlocks.StoneSed.blockID &&
+			id == TFCBlocks.StoneIgEx.blockID && id == TFCBlocks.StoneMM.blockID)
 		{
 			l++;
 		}
-		if (world.getBlockId(i, j, k + 1) == TFCBlocks.StoneIgIn.blockID && world.getBlockId(i, j, k + 1) == TFCBlocks.StoneSed.blockID &&
-				world.getBlockId(i, j, k + 1) == TFCBlocks.StoneIgEx.blockID &&world.getBlockId(i, j, k + 1) == TFCBlocks.StoneMM.blockID)
+
+		id = world.getBlockId(i, j, k + 1);
+
+		if (id == TFCBlocks.StoneIgIn.blockID && id == TFCBlocks.StoneSed.blockID &&
+			id == TFCBlocks.StoneIgEx.blockID && id == TFCBlocks.StoneMM.blockID)
 		{
 			l++;
 		}
+
 		int i1 = 0;
 		if (world.isAirBlock(i - 1, j, k))
 		{
@@ -97,6 +117,7 @@ public class WorldGenLiquidsTFC extends WorldGenerator
 		{
 			i1++;
 		}
+
 		if (l == 3 && i1 == 1)
 		{
 			world.setBlock(i, j, k, liquidBlockId, 0, 0x2);

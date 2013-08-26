@@ -44,9 +44,12 @@ import TFC.WorldGen.Generators.Trees.WorldGenCustomShortTrees;
 
 public class BiomeGenJungleTFC extends TFCBiome
 {
-	private WorldGenVines vinesGen;
 	private WorldGenCustomTallGrass grass1Gen;
 	private WorldGenCustomTallGrass grass2Gen;
+	private WorldGenCustomHugeTrees hugeTreeGen;
+	private WorldGenCustomShortTrees shortTreeGen;
+	private WorldGenCustomShrub shrubGen;
+	private WorldGenVines vinesGen;
 
 	public BiomeGenJungleTFC(int id)
 	{
@@ -58,9 +61,12 @@ public class BiomeGenJungleTFC extends TFCBiome
 		//this.spawnableMonsterList.add(new SpawnListEntry(EntityOcelot.class, 2, 1, 1));
 		this.spawnableCreatureList.add(new SpawnListEntry(EntityChickenTFC.class, 3, 1, 3));
 		this.spawnableCreatureList.add(new SpawnListEntry(EntityPigTFC.class, 2, 1, 3));
-		this.vinesGen = new WorldGenVines();
 		this.grass1Gen = new WorldGenCustomTallGrass(Block.tallGrass.blockID, 1);
 		this.grass2Gen = new WorldGenCustomTallGrass(Block.tallGrass.blockID, 2);
+		this.hugeTreeGen = new WorldGenCustomHugeTrees(false, 0, 15, 15);
+		this.shortTreeGen = new WorldGenCustomShortTrees(false,15);
+		this.shrubGen = new WorldGenCustomShrub(15, 15);
+		this.vinesGen = new WorldGenVines();
 	}
 
 	public void decorate(World par1World, Random par2Random, int par3, int par4)
@@ -87,7 +93,27 @@ public class BiomeGenJungleTFC extends TFCBiome
 	@Override
 	public WorldGenerator getRandomWorldGenForTrees(Random par1Random, World world)
 	{
-		return (WorldGenerator)(par1Random.nextInt(10) == 0 ? new WorldGenCustomShortTrees(false,15) : par1Random.nextInt(2) == 0 ? new WorldGenCustomShrub(15, 15) : par1Random.nextInt(3) == 0 ? new WorldGenCustomHugeTrees(false, 10 + par1Random.nextInt(20), 15, 15) : new WorldGenCustomShortTrees(false, 15));
+		WorldGenerator gen;
+
+		if (par1Random.nextInt(10) == 0)
+		{
+			gen = shortTreeGen;
+		}
+		else if (par1Random.nextInt(2) == 0)
+		{
+			gen = shrubGen;
+		}
+		else if (par1Random.nextInt(3) == 0)
+		{
+			hugeTreeGen.setBaseHeight(10 + par1Random.nextInt(20));
+			gen = hugeTreeGen;
+		}
+		else
+		{
+			gen = shortTreeGen;
+		}
+
+		return gen;
 	}
 	
 	protected float getMonthTemp(int month)

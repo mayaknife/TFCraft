@@ -8,7 +8,8 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class WorldGenSoilPits implements IWorldGenerator
 {
-
+	private static WorldGenClayPit clayPitGen = new WorldGenClayPit(16);
+	private static WorldGenPeatPit peatPitGen = new WorldGenPeatPit(24);
 
 	public WorldGenSoilPits()
 	{
@@ -23,14 +24,14 @@ public class WorldGenSoilPits implements IWorldGenerator
 		{
 			int var2 = chunkX + random.nextInt(16) + 8;
 			int var3 = chunkZ + random.nextInt(16) + 8;
-			new WorldGenClayPit(16).generate(world, random, var2, world.getTopSolidOrLiquidBlock(var2, var3), var3);
+			clayPitGen.generate(world, random, var2, world.getTopSolidOrLiquidBlock(var2, var3), var3);
 		}
 
 		for (int var1 = 0; var1 < 1; ++var1)
 		{
 			int var2 = chunkX + random.nextInt(16) + 8;
 			int var3 = chunkZ + random.nextInt(16) + 8;
-			new WorldGenPeatPit(24).generate(world, random, var2, world.getTopSolidOrLiquidBlock(var2, var3), var3);
+			peatPitGen.generate(world, random, var2, world.getTopSolidOrLiquidBlock(var2, var3), var3);
 		}
 
 	}

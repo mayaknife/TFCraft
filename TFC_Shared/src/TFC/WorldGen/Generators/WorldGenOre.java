@@ -14,6 +14,143 @@ public class WorldGenOre implements IWorldGenerator
 {
 	int Min;
 	int Max;
+
+	//	Different types of stone where each ore can be found.
+	//
+	private static final int[] copperLayers = {
+		TFCBlocks.StoneIgEx.blockID, -1,
+		Block.sandStone.blockID, -1
+	};
+	private static final int[] goldLayers = {
+		TFCBlocks.StoneIgEx.blockID, -1,
+		TFCBlocks.StoneIgIn.blockID, -1
+	};
+	private static final int[] hematiteLayers = {
+		TFCBlocks.StoneIgEx.blockID, -1
+	};
+	private static final int[] silverLayers = {
+		TFCBlocks.StoneIgIn.blockID, 0,
+		TFCBlocks.StoneMM.blockID, 4
+	};
+	private static final int[] cassiteriteLayers = {
+		TFCBlocks.StoneIgIn.blockID, 0
+	};
+	private static final int[] cassiterite2Layers = {
+		TFCBlocks.StoneIgEx.blockID, -1
+	};
+	private static final int[] galenaLayers = {
+		TFCBlocks.StoneIgEx.blockID, -1,
+		TFCBlocks.StoneMM.blockID, -1,
+		TFCBlocks.StoneIgIn.blockID, 0,
+		TFCBlocks.StoneSed.blockID, 5
+	};
+	private static final int[] bismuthiniteLayers = {
+		TFCBlocks.StoneIgIn.blockID, -1,
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] garnieriteLayers = {
+		TFCBlocks.StoneIgIn.blockID, 2
+	};
+	private static final int[] malachiteLayers = {
+		TFCBlocks.StoneSed.blockID, 5,
+		TFCBlocks.StoneMM.blockID, 5
+	};
+	private static final int[] magnetiteLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] limoniteLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] sphaleriteLayers = {
+		TFCBlocks.StoneMM.blockID, -1
+	};
+	private static final int[] tetrahedriteLayers = {
+		TFCBlocks.StoneIgEx.blockID, -1,
+		TFCBlocks.StoneMM.blockID, -1,
+		TFCBlocks.StoneIgIn.blockID, -1,
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] bituminousCoalLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] ligniteLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] kaoliniteLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] gypsumLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] satinsparLayers = {
+		TFCBlocks.Ore2.blockID, 1
+	};
+	private static final int[] seleniteLayers = {
+		TFCBlocks.Ore2.blockID, 1
+	};
+	private static final int[] graphiteLayers = {
+		TFCBlocks.StoneMM.blockID, 4,
+		TFCBlocks.StoneMM.blockID, 0,
+		TFCBlocks.StoneMM.blockID, 5,
+		TFCBlocks.StoneMM.blockID, 3
+	};
+	private static final int[] kimberliteLayers = {
+		TFCBlocks.StoneIgIn.blockID, 2
+	};
+	private static final int[] petrifiedWoodLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	/*
+	private static final int[] sulfurLayers = {
+		TFCBlocks.StoneIgEx.blockID, -1,
+		TFCBlocks.Ore2.blockID, 8
+	};
+	*/
+	private static final int[] jetLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	/*
+	private static final int[] microclineLayers = {
+		TFCBlocks.StoneIgIn.blockID, 0
+	};
+	*/
+	private static final int[] pitchblendeLayers = {
+		TFCBlocks.StoneIgIn.blockID, 0
+	};
+	private static final int[] cinnabarLayers = {
+		TFCBlocks.StoneIgEx.blockID, -1,
+		TFCBlocks.StoneSed.blockID, 2,
+		TFCBlocks.StoneMM.blockID, 0
+	};
+	private static final int[] cryoliteLayers = {
+		TFCBlocks.StoneIgIn.blockID, 0
+	};
+	private static final int[] saltpeterLayers = {
+		TFCBlocks.StoneSed.blockID, -1
+	};
+	private static final int[] olivineLayers = {
+		TFCBlocks.StoneIgIn.blockID, 2
+	};
+	private static final int[] serpentineLayers = {
+		TFCBlocks.Ore3.blockID, 1
+	};
+	private static final int[] sylviteLayers = {
+		TFCBlocks.StoneSed.blockID, 4
+	};
+	private static final int[] boraxLayers = {
+		TFCBlocks.StoneSed.blockID, 4
+	};
+	private static final int[] borax2Layers = {
+		TFCBlocks.Ore2.blockID, 1
+	};
+	private static final int[] lapisLayers = {
+		TFCBlocks.StoneMM.blockID, 5
+	};
+	private static final int[] platinumLayers = {
+		TFCBlocks.Ore.blockID, 1,
+		TFCBlocks.Ore3.blockID, 8
+	};
+
 	public WorldGenOre(int min, int max)
 	{
 		Min = min;
@@ -28,152 +165,148 @@ public class WorldGenOre implements IWorldGenerator
 		chunkZ *= 16;
 		int height = Min-Max;
 		//============Copper
-		createOreVein(TFCBlocks.Ore.blockID, 0,new int[]{TFCBlocks.StoneIgEx.blockID,-1,Block.sandStone.blockID,-1},//IgEx and Sandstone, veins
+		createOreVein(TFCBlocks.Ore.blockID, 0, copperLayers,//IgEx and Sandstone, veins
 				/*rarity*/100,/*veinSize*/80,/*veinAmt*/55,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Native Copper");
 
 		//============Gold
-		createOreVein(TFCBlocks.Ore.blockID, 1,new int[]{TFCBlocks.StoneIgEx.blockID,-1,TFCBlocks.StoneIgIn.blockID,-1},//Ig veins
+		createOreVein(TFCBlocks.Ore.blockID, 1, goldLayers,//Ig veins
 				/*rarity*/130,/*veinSize*/35,/*veinAmt*/45,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/20,         world, rand, chunkX, chunkZ, Min, Max, "Native Gold");
 
 		//============Hematite
-		createOreVein(TFCBlocks.Ore.blockID, 3,new int[]{TFCBlocks.StoneIgEx.blockID,-1},//IgEx veins
+		createOreVein(TFCBlocks.Ore.blockID, 3, hematiteLayers,//IgEx veins
 				/*rarity*/100,/*veinSize*/80,/*veinAmt*/42,/*height*/height,/*diameter*/100,/*vDensity*/40,/*hDensity*/30,         world, rand, chunkX, chunkZ, Min, Max, "Hematite");
 
 		//============Silver
-		createOreVein(TFCBlocks.Ore.blockID, 4,new int[]{TFCBlocks.StoneIgIn.blockID,0,TFCBlocks.StoneMM.blockID,4},//granite and gneiss, veins
+		createOreVein(TFCBlocks.Ore.blockID, 4, silverLayers,//granite and gneiss, veins
 				/*rarity*/100,/*veinSize*/80,/*veinAmt*/45,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/30,         world, rand, chunkX, chunkZ, Min, Max, "Native Silver");
 
 		//============Cassiterite
-		createOreVein(TFCBlocks.Ore.blockID, 5,new int[]{TFCBlocks.StoneIgIn.blockID,0},//Granite Veins
+		createOreVein(TFCBlocks.Ore.blockID, 5, cassiteriteLayers,//Granite Veins
 				/*rarity*/100,/*veinSize*/85,/*veinAmt*/55,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/50,         world, rand, chunkX, chunkZ, Min, Max, "Cassiterite");
 
 		//============Cassiterite2
-		createOreVein(TFCBlocks.Ore.blockID, 5,new int[]{TFCBlocks.StoneIgEx.blockID,-1},//IgEx Veins
+		createOreVein(TFCBlocks.Ore.blockID, 5, cassiterite2Layers,//IgEx Veins
 				/*rarity*/140,/*veinSize*/80,/*veinAmt*/45,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Cassiterite");
 
 		//============Galena
-		createOreVein(TFCBlocks.Ore.blockID, 6,new int[]{TFCBlocks.StoneIgEx.blockID,-1,TFCBlocks.StoneMM.blockID,-1,
-				TFCBlocks.StoneIgIn.blockID,0,TFCBlocks.StoneSed.blockID,5},//igex, mm, granite, limestone as veins
+		createOreVein(TFCBlocks.Ore.blockID, 6, galenaLayers,//igex, mm, granite, limestone as veins
 				/*rarity*/120,/*veinSize*/80,/*veinAmt*/55,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Galena");
 
 		//============Bismuthinite
-		createOreVein(TFCBlocks.Ore.blockID, 7,new int[]{TFCBlocks.StoneIgIn.blockID,-1,TFCBlocks.StoneSed.blockID,-1},//Granite Veins
+		createOreVein(TFCBlocks.Ore.blockID, 7, bismuthiniteLayers,//Granite Veins
 				/*rarity*/120,/*veinSize*/80,/*veinAmt*/45,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Bismuthinite");
 
 		//============Garnierite
-		createOreVein(TFCBlocks.Ore.blockID, 8,new int[]{TFCBlocks.StoneIgIn.blockID,2},//Gabbro Veins
+		createOreVein(TFCBlocks.Ore.blockID, 8, garnieriteLayers,//Gabbro Veins
 				/*rarity*/160,/*veinSize*/40,/*veinAmt*/35,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/10,         world, rand, chunkX, chunkZ, Min, Max, "Garnierite");
 
 		//============Malachite
-		createOreVein(TFCBlocks.Ore.blockID, 9,new int[]{TFCBlocks.StoneSed.blockID,5,TFCBlocks.StoneMM.blockID,5},//limestone and marble veins
+		createOreVein(TFCBlocks.Ore.blockID, 9, malachiteLayers,//limestone and marble veins
 				/*rarity*/140,/*veinSize*/80,/*veinAmt*/45,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/20,         world, rand, chunkX, chunkZ, Min, Max, "Malachite");
 
 		//============Magnetite
-		createOreVein(TFCBlocks.Ore.blockID, 10,new int[]{TFCBlocks.StoneSed.blockID,-1},//Sedimentary, Large Cluster
+		createOreVein(TFCBlocks.Ore.blockID, 10, magnetiteLayers,//Sedimentary, Large Cluster
 				/*rarity*/180,/*veinSize*/80,/*veinAmt*/36,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Magnetite");
 
 		//============Limonite
-		createOreVein(TFCBlocks.Ore.blockID, 11,new int[]{TFCBlocks.StoneSed.blockID,-1},//Sedimentary, Large Cluster
+		createOreVein(TFCBlocks.Ore.blockID, 11, limoniteLayers,//Sedimentary, Large Cluster
 				/*rarity*/180,/*veinSize*/85,/*veinAmt*/40,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Limonite");
 
 		//============Sphalerite
-		createOreVein(TFCBlocks.Ore.blockID, 12,new int[]{TFCBlocks.StoneMM.blockID,-1},//mm, veins
+		createOreVein(TFCBlocks.Ore.blockID, 12, sphaleriteLayers,//mm, veins
 				/*rarity*/140,/*veinSize*/80,/*veinAmt*/38,/*height*/height,/*diameter*/100,/*vDensity*/60,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Sphalerite");
 
 		//============Tetrahedrite
-		createOreVein(TFCBlocks.Ore.blockID, 13,new int[]{TFCBlocks.StoneIgEx.blockID,-1,TFCBlocks.StoneMM.blockID,-1,
-				TFCBlocks.StoneIgIn.blockID,-1,TFCBlocks.StoneSed.blockID,-1},//everything, veins
+		createOreVein(TFCBlocks.Ore.blockID, 13, tetrahedriteLayers,//everything, veins
 				/*rarity*/120,/*veinSize*/85,/*veinAmt*/45,/*height*/height,/*diameter*/100,/*vDensity*/50,/*hDensity*/30,         world, rand, chunkX, chunkZ, Min, Max, "Tetrahedrite");
 
 		//============Bituminous Coal
-		createOre(TFCBlocks.Ore.blockID, 14,new int[]{TFCBlocks.StoneSed.blockID,-1},//sedimentary, veins
+		createOre(TFCBlocks.Ore.blockID, 14, bituminousCoalLayers,//sedimentary, veins
 				/*rarity*/80,/*veinSize*/80,/*veinAmt*/60,/*height*/height,/*diameter*/200,/*vDensity*/60,/*hDensity*/80,         world, rand, chunkX, chunkZ, Min, Max, "Bituminous Coal");
 
 		//============Lignite
-		createOre(TFCBlocks.Ore.blockID, 15,new int[]{TFCBlocks.StoneSed.blockID,-1},//sedimentary, veins
+		createOre(TFCBlocks.Ore.blockID, 15, ligniteLayers,//sedimentary, veins
 				/*rarity*/80,/*veinSize*/80,/*veinAmt*/60,/*height*/height,/*diameter*/200,/*vDensity*/10,/*hDensity*/80,         world, rand, chunkX, chunkZ, Min, Max, "Lignite");
 
 		//============Kaolinite
-		createOre(TFCBlocks.Ore2.blockID, 0,new int[]{TFCBlocks.StoneSed.blockID,-1},//sedimentary, large clusters
+		createOre(TFCBlocks.Ore2.blockID, 0, kaoliniteLayers,//sedimentary, large clusters
 				/*rarity*/90,/*veinSize*/20,/*veinAmt*/2,/*height*/height,/*diameter*/40,/*vDensity*/80,/*hDensity*/90,         world, rand, chunkX, chunkZ, Min, Max, "Kaolinite");
 
 		//============Gypsum
-		createOre(TFCBlocks.Ore2.blockID, 1,new int[]{TFCBlocks.StoneSed.blockID,-1},//sedimentary, large clusters
+		createOre(TFCBlocks.Ore2.blockID, 1, gypsumLayers,//sedimentary, large clusters
 				/*rarity*/110,/*veinSize*/40,/*veinAmt*/20,/*height*/height,/*diameter*/40,/*vDensity*/50,/*hDensity*/90,         world, rand, chunkX, chunkZ, Min, Max, "Gypsum");
 
 		//============Satinspar
-		createOreVein(TFCBlocks.Ore2.blockID, 2,new int[]{TFCBlocks.Ore2.blockID,1},//gypsum, small clusters
+		createOreVein(TFCBlocks.Ore2.blockID, 2, satinsparLayers,//gypsum, small clusters
 				/*rarity*/2,/*veinSize*/6,/*veinAmt*/20,/*height*/height,/*diameter*/40,/*vDensity*/40,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Satinspar");
 
 		//============Selenite
-		createOreVein(TFCBlocks.Ore2.blockID, 3,new int[]{TFCBlocks.Ore2.blockID,1},//gypsum, small clusters
+		createOreVein(TFCBlocks.Ore2.blockID, 3, seleniteLayers,//gypsum, small clusters
 				/*rarity*/2,/*veinSize*/6,/*veinAmt*/20,/*height*/height,/*diameter*/40,/*vDensity*/40,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Selenite");
 
 		//============Graphite
-		createOreVein(TFCBlocks.Ore2.blockID, 4,new int[]{TFCBlocks.StoneMM.blockID,4,TFCBlocks.StoneMM.blockID,0,
-				TFCBlocks.StoneMM.blockID,5, TFCBlocks.StoneMM.blockID,3},//gneiss, quartzite, marble, schist, small clusters
+		createOreVein(TFCBlocks.Ore2.blockID, 4, graphiteLayers,//gneiss, quartzite, marble, schist, small clusters
 				/*rarity*/100,/*veinSize*/6,/*veinAmt*/24,/*height*/height,/*diameter*/40,/*vDensity*/40,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Graphite");
 
 		//============Kimberlite
-		createOreVein(TFCBlocks.Ore2.blockID, 5,new int[]{TFCBlocks.StoneIgIn.blockID,2},//Gabbro, large clusters
+		createOreVein(TFCBlocks.Ore2.blockID, 5, kimberliteLayers,//Gabbro, large clusters
 				/*rarity*/200,/*veinSize*/40,/*veinAmt*/20,/*height*/height,/*diameter*/40,/*vDensity*/40,/*hDensity*/90,         world, rand, chunkX, chunkZ, Min, Max, "Kimberlite");
 
 		//============Petrified Wood
-		createOre(TFCBlocks.Ore2.blockID, 6,new int[]{TFCBlocks.StoneSed.blockID,-1},//Sedimentary, small clusters 
+		createOre(TFCBlocks.Ore2.blockID, 6, petrifiedWoodLayers,//Sedimentary, small clusters 
 				/*rarity*/200,/*veinSize*/10,/*veinAmt*/5,/*height*/height,/*diameter*/20,/*vDensity*/10,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Petrified Wood");
 
 		//============Sulfur
-		//      createOre(mod_TFCraft.terraOre.blockID, 14,new int[]{mod_TFCraft.terraStoneIgEx.blockID,-1,mod_TFCraft.terraOre2.blockID,8},//igex, gypsum small clusters
+		//      createOre(mod_TFCraft.terraOre.blockID, 14, sulfurLayers,//igex, gypsum small clusters
 		//              /*rarity*/4,/*veinSize*/6,/*veinAmt*/10,/*height*/128,/*diameter*/40,/*vDensity*/40,/*hDensity*/40,         world, rand, chunkX, chunkZ);
 
 		//============Jet
-		createOre(TFCBlocks.Ore2.blockID, 8,new int[]{TFCBlocks.StoneSed.blockID,-1},//Sedimentary, med clusters 
+		createOre(TFCBlocks.Ore2.blockID, 8, jetLayers,//Sedimentary, med clusters 
 				/*rarity*/100,/*veinSize*/30,/*veinAmt*/10,/*height*/height,/*diameter*/40,/*vDensity*/60,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Jet");
 
 		//============Microcline
-		//        createOre(mod_TFC_Core.terraOre2.blockID, 9,new int[]{mod_TFC_Core.terraStoneIgIn.blockID,0},//granite, large clusters 
+		//        createOre(mod_TFC_Core.terraOre2.blockID, 9, microclineLayers,//granite, large clusters 
 		//                /*rarity*/45,/*veinSize*/64,/*veinAmt*/2,/*height*/height,/*diameter*/50,/*vDensity*/10,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max);
 
 		//============Pitchblende
-		createOre(TFCBlocks.Ore2.blockID, 10,new int[]{TFCBlocks.StoneIgIn.blockID,0},//granite, small clusters 
+		createOre(TFCBlocks.Ore2.blockID, 10, pitchblendeLayers,//granite, small clusters 
 				/*rarity*/100,/*veinSize*/10,/*veinAmt*/10,/*height*/height,/*diameter*/50,/*vDensity*/10,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Pithcblende");
 
 		//============Cinnabar
-		createOreVein(TFCBlocks.Ore2.blockID, 11,new int[]{TFCBlocks.StoneIgEx.blockID,-1,TFCBlocks.StoneSed.blockID,2,
-				TFCBlocks.StoneMM.blockID,0},//igex, shale, quartzite small clusters
+		createOreVein(TFCBlocks.Ore2.blockID, 11, cinnabarLayers,//igex, shale, quartzite small clusters
 				/*rarity*/60,/*veinSize*/35,/*veinAmt*/30,/*height*/height,/*diameter*/50,/*vDensity*/40,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Cinnabar");
 
 		//============Cryolite
-		createOre(TFCBlocks.Ore2.blockID, 12,new int[]{TFCBlocks.StoneIgIn.blockID,0},//granite, small clusters 
+		createOre(TFCBlocks.Ore2.blockID, 12, cryoliteLayers,//granite, small clusters 
 				/*rarity*/100,/*veinSize*/10,/*veinAmt*/20,/*height*/height,/*diameter*/50,/*vDensity*/10,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Cryolite");
 
 		//============Saltpeter
-		createOre(TFCBlocks.Ore2.blockID, 13,new int[]{TFCBlocks.StoneSed.blockID,-1},//sed, small clusters 
+		createOre(TFCBlocks.Ore2.blockID, 13, saltpeterLayers,//sed, small clusters 
 				/*rarity*/100,/*veinSize*/10,/*veinAmt*/20,/*height*/height,/*diameter*/50,/*vDensity*/10,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Saltpeter");
 
 		//============Olivine(Out of Order) must come before serpentine
-		createOre(TFCBlocks.Ore3.blockID, 1,new int[]{TFCBlocks.StoneIgIn.blockID,2},//gabbro, large clusters 
+		createOre(TFCBlocks.Ore3.blockID, 1, olivineLayers,//gabbro, large clusters 
 				/*rarity*/80,/*veinSize*/30,/*veinAmt*/14,/*height*/height,/*diameter*/50,/*vDensity*/10,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Olivine");
 
 		//============Serpentine
-		createOre(TFCBlocks.Ore2.blockID, 14,new int[]{TFCBlocks.Ore3.blockID,1},//Olivine, small clusters 
+		createOre(TFCBlocks.Ore2.blockID, 14, serpentineLayers,//Olivine, small clusters 
 				/*rarity*/2,/*veinSize*/10,/*veinAmt*/8,/*height*/height,/*diameter*/50,/*vDensity*/10,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Serpentine");
 
 		//============Sylvite
-		createOre(TFCBlocks.Ore2.blockID, 15,new int[]{TFCBlocks.StoneSed.blockID,4},//Rock Salt, large clusters 
+		createOre(TFCBlocks.Ore2.blockID, 15, sylviteLayers,//Rock Salt, large clusters 
 				/*rarity*/80,/*veinSize*/40,/*veinAmt*/14,/*height*/height,/*diameter*/50,/*vDensity*/10,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Sylvite");
 
 		//============Borax
-		createOre(TFCBlocks.Ore3.blockID, 0,new int[]{TFCBlocks.StoneSed.blockID,4},//Rock Salt, large clusters 
+		createOre(TFCBlocks.Ore3.blockID, 0, boraxLayers,//Rock Salt, large clusters 
 				/*rarity*/50,/*veinSize*/50,/*veinAmt*/24,/*height*/height,/*diameter*/200,/*vDensity*/50,/*hDensity*/60,         world, rand, chunkX, chunkZ, Min, Max, "Borax");
-		createOre(TFCBlocks.Ore3.blockID, 0,new int[]{TFCBlocks.Ore2.blockID,1},//Gypsum, small clusters 
+		createOre(TFCBlocks.Ore3.blockID, 0, borax2Layers,//Gypsum, small clusters 
 				/*rarity*/3,/*veinSize*/12,/*veinAmt*/22,/*height*/height,/*diameter*/200,/*vDensity*/40,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Borax");
 		//============Lapis Lazuli
-		createOre(TFCBlocks.Ore3.blockID, 2,new int[]{TFCBlocks.StoneMM.blockID,5},//Marble, small clusters 
+		createOre(TFCBlocks.Ore3.blockID, 2, lapisLayers,//Marble, small clusters 
 				/*rarity*/90,/*veinSize*/20,/*veinAmt*/26,/*height*/height,/*diameter*/60,/*vDensity*/40,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Lapis Lazuli");
 
 		//============Platinum -- (out of order) must follow magnetite and olivine
-		createOre(TFCBlocks.Ore.blockID, 2,new int[]{TFCBlocks.Ore.blockID,1,TFCBlocks.Ore3.blockID,8},//magnetite, veins
+		createOre(TFCBlocks.Ore.blockID, 2, platinumLayers,//magnetite, veins
 				/*rarity*/10,/*veinSize*/8,/*veinAmt*/10,/*height*/height,/*diameter*/25,/*vDensity*/60,/*hDensity*/40,         world, rand, chunkX, chunkZ, Min, Max, "Platinum");
 
 	}

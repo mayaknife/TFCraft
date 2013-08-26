@@ -31,30 +31,41 @@ public class WorldGenClayPit implements IWorldGenerator
 
 		if(rand.nextInt(30) == 0 && j <= 150)
 		{
+			int radiusSquared = radius * radius;
+
 			for (int xCoord = i - radius; xCoord <= i + radius; ++xCoord)
 			{
+				int x = xCoord - i;
+				int xSquared = x * x;
+
 				for (int zCoord = k - radius; zCoord <= k + radius; ++zCoord)
 				{
-					int x = xCoord - i;
 					int z = zCoord - k;
+					int zSquared = z * z;
 
-					if (x * x + z * z <= radius * radius && TFC_Climate.getRainfall(xCoord, 145, zCoord) >= 500)
+					if (xSquared + zSquared <= radiusSquared && TFC_Climate.getRainfall(xCoord, 145, zCoord) >= 500)
 					{
+						DataLayer rockLayer1 = ((TFCWorldChunkManager)world.getWorldChunkManager()).getRockLayerAt(xCoord, zCoord, 0);
+						int clayType = TFC_Core.getTypeForClay(rockLayer1.data2);
+						int clayGrassType = TFC_Core.getTypeForClayGrass(rockLayer1.data2);
+						int soilMeta = TFC_Core.getSoilMetaFromStone(rockLayer1.data1, rockLayer1.data2);
+
 						for (int yCoord = j - depth; yCoord <= j + depth; ++yCoord)
 						{
 							int ID = world.getBlockId(xCoord, yCoord, zCoord);
 
-							DataLayer rockLayer1 = ((TFCWorldChunkManager)world.getWorldChunkManager()).getRockLayerAt(xCoord, zCoord, 0);
 
 							if (ID == TFCBlocks.Dirt.blockID || ID == TFCBlocks.Dirt2.blockID)
 							{
-								world.setBlock(xCoord, yCoord, zCoord, 
-										TFC_Core.getTypeForClay(rockLayer1.data2), TFC_Core.getSoilMetaFromStone(rockLayer1.data1, rockLayer1.data2), 0x2);
+								world.setBlock(
+									xCoord, yCoord, zCoord, clayType, soilMeta, 0x2
+								);
 							}
 							else if(ID == TFCBlocks.Grass.blockID || ID == TFCBlocks.Grass2.blockID)
 							{
-								world.setBlock(xCoord, yCoord, zCoord, 
-										TFC_Core.getTypeForClayGrass(rockLayer1.data2), TFC_Core.getSoilMetaFromStone(rockLayer1.data1, rockLayer1.data2), 0x2);
+								world.setBlock(
+									xCoord, yCoord, zCoord, clayGrassType, soilMeta, 0x2
+								);
 								if(rand.nextInt(9) == 0 && world.getBlockId(xCoord, yCoord+1, zCoord) == 0) {
 									world.setBlock(xCoord, yCoord+1, zCoord, TFCBlocks.Flora.blockID, 0, 2);
 								}
