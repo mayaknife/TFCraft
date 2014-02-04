@@ -1,7 +1,5 @@
 package TFC.Entities.Mobs;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -17,16 +15,13 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import TFC.TFCItems;
 import TFC.API.Entities.IAnimal;
-import TFC.API.Entities.IAnimal.GenderEnum;
 import TFC.Core.TFC_Core;
 import TFC.Core.TFC_Time;
 import TFC.Entities.AI.EntityAIMateTFC;
-import TFC.Items.ItemTerra;
 
 public class EntityDeer extends EntityAnimal implements IAnimal
 {    
@@ -53,12 +48,11 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 		super(par1World);
 		running = false;
 		this.setSize(0.9F, 1.3F);
-		float var2 = 0.23F / 1.1F;
 		sex = rand.nextInt(2);
 		this.getNavigator().setAvoidsWater(true);
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 0.38F));
-		this.tasks.addTask(2, new EntityAIMateTFC(this,worldObj, var2));
+		this.tasks.addTask(2, new EntityAIMateTFC(this,worldObj, 1.0f));
 		//this.tasks.addTask(3, new EntityAIPanicTFC(this, var2*2, false, true));
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityPlayer.class, 12.0F, 0.5F, 0.7F));
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityWolfTFC.class, 8f, 0.5F, 0.7F));
@@ -67,12 +61,13 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 		//this.tasks.addTask(4, new EntityAIFollowParent(this, 0.25F));
 		this.tasks.addTask(5, this.aiEatGrass);
 		//this.tasks.addTask(5, new EntityAIRutt(this, var2));
-		this.tasks.addTask(1, new EntityAIWander(this, var2));
+		this.tasks.addTask(1, new EntityAIWander(this, 0.75));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		//this.tasks.addTask(8, new EntityAILookIdle(this));
 
 		pregnancyRequiredTime = 4 * TFC_Time.daysInMonth;
-		
+
+		hunger = 168000;
 		int degreeOfDiversion = 1;
 		size_mod = (((rand.nextInt (degreeOfDiversion+1)*(rand.nextBoolean()?1:-1)) / 10f) + 1F) * (1.0F - 0.1F * sex);
 
@@ -112,7 +107,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 	public boolean getRunning(){
 		return running;
 	}
-	
+
 	public void syncData()
 	{
 		if(dataWatcher!= null)
@@ -123,7 +118,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 			}
 			else{
 				sex = this.dataWatcher.getWatchableObjectInt(13);
-				size_mod = this.dataWatcher.func_111145_d(14);
+				size_mod = this.dataWatcher.getWatchableObjectFloat(14);
 			}
 		}
 	}
@@ -152,7 +147,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 			super.inLove = 0;
 			setInLove(true);
 		}
-		
+
 		if(isAdult()){
 			setGrowingAge(0);
 		}
@@ -163,7 +158,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 		{
 			if(TFC_Time.getTotalTicks() >= conception + pregnancyRequiredTime)
 			{
-				EntityCowTFC baby = (EntityCowTFC) createChildTFC(this);
+				EntityDeer baby = (EntityDeer) createChildTFC(this);
 				baby.setLocationAndAngles (posX+(rand.nextFloat()-0.5F)*2F,posY,posZ+(rand.nextFloat()-0.5F)*2F, 0.0F, 0.0F);
 				baby.rotationYawHead = baby.rotationYaw;
 				baby.renderYawOffset = baby.rotationYaw;
@@ -173,7 +168,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 			}
 		}
 
-		if (hunger > 144000 && rand.nextInt (100) == 0 && func_110143_aJ() < TFC_Core.getEntityMaxHealth(this) && !isDead)
+		if (hunger > 144000 && rand.nextInt (100) == 0 && getHealth() < TFC_Core.getEntityMaxHealth(this) && !isDead)
 		{
 			this.heal(1);
 		}
@@ -186,10 +181,10 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 	}
 
 	@Override
-	protected void func_110147_ax()
+	protected void applyEntityAttributes()
 	{
-		super.func_110147_ax();
-		this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(400);//MaxHealth
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(400);//MaxHealth
 	}
 
 	@Override
@@ -214,8 +209,8 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 			this.dropItem(Item.bone.itemID, rand.nextInt(4)+2);
 		}
 	}
-	
-	
+
+
 
 	/**
 	 * Returns the item ID for the item the mob drops on death.
@@ -257,8 +252,6 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 		nbt.setFloat("MateSize", mateSizeMod);
 		nbt.setLong("ConceptionTime",conception);
 		nbt.setInteger("Age", getBirthDay());
-		nbt.setBoolean("Sheared", this.getSheared());
-		nbt.setByte("Color", (byte)this.getFleeceColor());
 	}
 
 	/**
@@ -276,8 +269,6 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 		mateSizeMod = nbt.getFloat("MateSize");
 		conception = nbt.getLong("ConceptionTime");
 		this.dataWatcher.updateObject(15, nbt.getInteger ("Age"));
-		this.setSheared(nbt.getBoolean("Sheared"));
-		this.setFleeceColor(nbt.getByte("Color"));
 	}
 
 	/**
@@ -307,60 +298,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 		return "mob.sheep";
 	}
 
-	public int getFleeceColor()
-	{
-		return this.dataWatcher.getWatchableObjectByte(16) & 15;
-	}
 
-	public void setFleeceColor(int par1)
-	{
-		byte var2 = this.dataWatcher.getWatchableObjectByte(16);
-		this.dataWatcher.updateObject(16, Byte.valueOf((byte)(var2 & 240 | par1 & 15)));
-	}
-
-	/**
-	 * returns true if a sheeps wool has been sheared
-	 */
-	public boolean getSheared()
-	{
-		return (this.dataWatcher.getWatchableObjectByte(16) & 16) != 0;
-	}
-
-	/**
-	 * make a sheep sheared if set to true
-	 */
-	public void setSheared(boolean par1)
-	{
-		byte var2 = this.dataWatcher.getWatchableObjectByte(16);
-
-		if (par1)
-		{
-			this.dataWatcher.updateObject(16, Byte.valueOf((byte)(var2 | 16)));
-		}
-		else
-		{
-			this.dataWatcher.updateObject(16, Byte.valueOf((byte)(var2 & -17)));
-		}
-	}
-
-	/**
-	 * This method is called when a sheep spawns in the world to select the color of sheep fleece.
-	 */
-	public static int getRandomFleeceColor(Random par0Random)
-	{
-		int var1 = par0Random.nextInt(100);
-		return var1 < 5 ? 15 : (var1 < 10 ? 7 : (var1 < 15 ? 8 : (var1 < 18 ? 12 : (par0Random.nextInt(500) == 0 ? 6 : 0))));
-	}
-
-	/**
-	 * This function applies the benefits of growing back wool and faster growing up to the acting entity. (This
-	 * function is used in the AIEatGrass)
-	 */
-	@Override
-	public void eatGrassBonus()
-	{
-		this.setSheared(false);
-	}
 
 	@Override
 	public void setGrowingAge(int par1)
@@ -383,7 +321,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 	{
 		return new EntityDeer(worldObj, this, entityageable.getEntityData().getInteger("Size Modifier"));
 	}*/
-	
+
 	//Commented out old method, the third variable should be the size modifier of the father, not the mother
 	@Override
 	public EntityAgeable createChild(EntityAgeable entityageable) 
@@ -430,7 +368,7 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 	@Override
 	public boolean canMateWith(IAnimal animal) 
 	{
-		if(animal.getGender() != this.getGender() && animal.isAdult() && animal instanceof EntityChickenTFC) {
+		if(animal.getGender() != this.getGender() && animal.isAdult() && animal instanceof EntityDeer) {
 			return true;
 		} else {
 			return false;
@@ -475,6 +413,13 @@ public class EntityDeer extends EntityAnimal implements IAnimal
 	public void setAnimalID(long id) 
 	{
 		animalID = id;
+	}
+	
+	
+	@Override
+	public void eatGrassBonus()
+	{
+		hunger += 24000;
 	}
 
 	@Override

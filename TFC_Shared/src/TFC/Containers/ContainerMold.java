@@ -2,6 +2,7 @@ package TFC.Containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
@@ -17,6 +18,8 @@ import TFC.Core.TFC_ItemHeat;
 import TFC.Core.Player.PlayerInfo;
 import TFC.Core.Player.PlayerManagerTFC;
 import TFC.Items.ItemMeltedMetal;
+import TFC.Items.ItemTuyere;
+import TFC.Items.Pottery.ItemPotteryBase;
 
 public class ContainerMold extends ContainerTFC {
 	private World world;
@@ -88,6 +91,17 @@ public class ContainerMold extends ContainerTFC {
 		}
 	}
 
+
+	@Override
+	public void updateProgressBar(int id, int value)
+	{
+		if (id == 0)
+		{
+			PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(player);
+			pi.moldTransferTimer = (short) value;
+		}
+	}
+
 	@Override
 	public void detectAndSendChanges()
 	{
@@ -95,6 +109,8 @@ public class ContainerMold extends ContainerTFC {
 		if(craftResult.getStackInSlot(0) == null)
 		{
 			PlayerInfo pi = PlayerManagerTFC.getInstance().getPlayerInfoFromPlayer(player);
+
+			short oldTransferTimer = pi.moldTransferTimer;
 
 			if(containerInv.getStackInSlot(0) != null && containerInv.getStackInSlot(1) != null)
 			{
@@ -154,7 +170,18 @@ public class ContainerMold extends ContainerTFC {
 				containerInv.setInventorySlotContents(1, new ItemStack(TFCItems.CeramicMold, 1, 1));
 				containerInv.setInventorySlotContents(0, null);
 			}
+
+			for (int var1 = 0; var1 < this.crafters.size(); ++var1)
+			{
+				ICrafting var2 = (ICrafting)this.crafters.get(var1);
+				if (pi.moldTransferTimer != oldTransferTimer)
+				{
+					var2.sendProgressBarUpdate(this, 0, pi.moldTransferTimer);
+				}
+			}
 		}
+
+
 	}
 
 	@Override
@@ -162,10 +189,13 @@ public class ContainerMold extends ContainerTFC {
 	{
 		Slot slot = (Slot)inventorySlots.get(clickedSlot);
 		Slot slot1 = (Slot)inventorySlots.get(0);
+		Slot slot2 = (Slot)inventorySlots.get(1);
+		Slot slot3 = (Slot)inventorySlots.get(2);
+		
 		if(slot != null && slot.getHasStack())
 		{
 			ItemStack itemstack1 = slot.getStack();
-			if(clickedSlot <= 1)
+			if(clickedSlot <= 2)
 			{
 				if(!entityplayer.inventory.addItemStackToInventory(itemstack1.copy()))
 				{
@@ -175,12 +205,29 @@ public class ContainerMold extends ContainerTFC {
 			}
 			else
 			{
-				if(slot1.getHasStack())
+				if(itemstack1.getItem() instanceof ItemMeltedMetal && TFC_ItemHeat.getIsLiquid(itemstack1))
 				{
-					return null;
-				}                     
-				slot1.putStack(itemstack1.copy());                          
-				itemstack1.stackSize--;
+					if(slot1.getHasStack())
+					{
+						return null;
+					}                     
+					ItemStack stack = itemstack1.copy();
+					stack.stackSize = 1;                            
+					slot1.putStack(stack);                          
+					itemstack1.stackSize--;
+				}
+				else if(itemstack1.getItem() instanceof ItemPotteryBase)
+				{
+					if(slot2.getHasStack())
+					{
+						return null;
+					}                     
+					ItemStack stack = itemstack1.copy();
+					stack.stackSize = 1;       
+					slot2.putStack(stack);                          
+					itemstack1.stackSize--;
+					
+				}
 			}
 			if(itemstack1.stackSize == 0)
 			{

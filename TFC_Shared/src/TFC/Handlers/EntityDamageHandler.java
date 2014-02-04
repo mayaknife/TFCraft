@@ -151,19 +151,20 @@ public class EntityDamageHandler
 			{
 				//a. If the attack hits an unprotected head, it does 75% more damage
 				//b. If the attack hits unprotected feet, it applies a slow to the player
-				if(location == 0)
+				if(location == 3)
 				{
 					damage *= 1.75f;
 				}
-				else if(location == 3)
+				else if(location == 0)
 				{
 					entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(), 100, 1));
 				}
 			}
 			//6. Apply the damage to the player
-			EntityArmorCalcEvent eventPost = new EntityArmorCalcEvent(entity, originalDamage, EntityArmorCalcEvent.EventType.POST);
+			EntityArmorCalcEvent eventPost = new EntityArmorCalcEvent(entity, damage, EntityArmorCalcEvent.EventType.POST);
 			MinecraftForge.EVENT_BUS.post(eventPost);
-			entity.setEntityHealth(entity.func_110143_aJ()-eventPost.incomingDamage);
+			//System.out.println(entity.getClass()+", "+eventPre.incomingDamage+", "+eventPost.incomingDamage);
+			entity.setHealth(entity.getHealth()-eventPost.incomingDamage);
 		}
 
 		return 0;
@@ -172,16 +173,15 @@ public class EntityDamageHandler
 	private int getRandomSlot(Random rand)
 	{
 		int chance = rand.nextInt(100);
-
 		if(chance < 10) {
-			return 0;//Helm
+			return 3;//Helm
 		} else if(chance < 20) {
-			return 3;//Feet
+			return 0;//Feet
 		} else if(chance < 80) {
-			return 1;//Chest
+			return 2;//Chest
 		}
 		else {
-			return 2;//Legs
+			return 1;//Legs
 		}
 	}
 
@@ -226,12 +226,12 @@ public class EntityDamageHandler
 		}
 		if (target.canAttackWithItem())
 		{
-			if (!target.func_85031_j(target))
+			if (!target.hitByEntity(target))
 			{
 				float i = TFC_MobData.SteveDamage;
 				if(stack != null) 
 				{
-					i = (float)event.entityPlayer.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e();
+					i = (float)event.entityPlayer.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
 					//event.entityPlayer.addChatMessage("Damage: " + i);
 					if(i == 1.0f)
 					{
@@ -314,7 +314,7 @@ public class EntityDamageHandler
 							event.entityPlayer.triggerAchievement(AchievementList.overkill);
 						}
 
-						event.entityPlayer.func_130011_c(target);
+						event.entityPlayer.setLastAttacker(target);
 
 						if (target instanceof EntityLiving)
 						{

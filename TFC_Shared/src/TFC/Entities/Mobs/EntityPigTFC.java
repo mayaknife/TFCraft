@@ -41,20 +41,23 @@ public class EntityPigTFC extends EntityPig implements IAnimal
 	public float size_mod = 1f;
 	public boolean inLove;
 
-	int degreeOfDiversion = 4;
+	int degreeOfDiversion = 2;
 
 	public EntityPigTFC(World par1World)
 	{
 		super(par1World);
 		this.setSize(0.9F, 0.9F);
 		this.getNavigator().setAvoidsWater(true);
-		float var2 = 0.25F;
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 0.38F));
-		this.tasks.addTask(2, new EntityAIMateTFC(this, worldObj, var2));
+		this.tasks.addTask(2, new EntityAIMateTFC(this, worldObj, 1.0f));
 		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.WheatGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.RyeGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.RiceGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.BarleyGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.OatGrain.itemID, false));
 		this.tasks.addTask(4, new EntityAIFollowParent(this, 0.28F));
-		this.tasks.addTask(5, new EntityAIWander(this, var2));
+		this.tasks.addTask(5, new EntityAIWander(this, 0.75));
 		this.tasks.addTask(6, this.aiEatGrass);
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
@@ -66,7 +69,7 @@ public class EntityPigTFC extends EntityPig implements IAnimal
 		timeOfConception = 0;
 		mateSizeMod = 0;
 		sex = rand.nextInt(2);
-		size_mod = (((rand.nextInt (degreeOfDiversion+1)*(rand.nextBoolean()?1:-1)) / 10f) + 1F) * (1.0F - 0.1F * sex);
+		size_mod = (((rand.nextInt (degreeOfDiversion+1)*10*(rand.nextBoolean()?1:-1)) / 100f) + 1F) * (1.0F - 0.1F * sex);
 
 		//	We hijack the growingAge to hold the day of birth rather
 		//	than number of ticks to next growth event. We want spawned
@@ -84,7 +87,7 @@ public class EntityPigTFC extends EntityPig implements IAnimal
 		this.posX = ((EntityLivingBase)mother).posX;
 		this.posY = ((EntityLivingBase)mother).posY;
 		this.posZ = ((EntityLivingBase)mother).posZ;
-		size_mod = (((rand.nextInt (degreeOfDiversion+1)*(rand.nextBoolean()?1:-1)) / 10f) + 1F) * (1.0F - 0.1F * sex) * (float)Math.sqrt((mother.getSize() + F_size)/1.9F);
+		size_mod = (((rand.nextInt (degreeOfDiversion+1)*10*(rand.nextBoolean()?1:-1)) / 100f) + 1F) * (1.0F - 0.1F * sex) * (float)Math.sqrt((mother.getSize() + F_size)/1.9F);
 		size_mod = Math.min(Math.max(size_mod, 0.7F),1.3f);
 
 		//	We hijack the growingAge to hold the day of birth rather
@@ -103,10 +106,10 @@ public class EntityPigTFC extends EntityPig implements IAnimal
 	}
 
 	@Override
-	protected void func_110147_ax()
+	protected void applyEntityAttributes()
 	{
-		super.func_110147_ax();
-		this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(500);//MaxHealth
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(500);//MaxHealth
 	}
 
 	@Override
@@ -167,7 +170,7 @@ public class EntityPigTFC extends EntityPig implements IAnimal
 		super.onLivingUpdate();
 		TFC_Core.PreventEntityDataUpdate = false;
 
-		if (hunger > 144000 && rand.nextInt (100) == 0 && func_110143_aJ() < TFC_Core.getEntityMaxHealth(this) && !isDead)
+		if (hunger > 144000 && rand.nextInt (100) == 0 && getHealth() < TFC_Core.getEntityMaxHealth(this) && !isDead)
 		{
 			this.heal(1);
 		}
@@ -183,7 +186,7 @@ public class EntityPigTFC extends EntityPig implements IAnimal
 			}
 			else{
 				sex = this.dataWatcher.getWatchableObjectInt(13);
-				size_mod = this.dataWatcher.func_111145_d(14);
+				size_mod = this.dataWatcher.getWatchableObjectFloat(14);
 			}
 		}
 	}
@@ -450,6 +453,12 @@ public class EntityPigTFC extends EntityPig implements IAnimal
 		resetInLove();
 		otherAnimal.setInLove(false);
 		mateSizeMod = otherAnimal.getSize();
+	}
+	
+	@Override
+	public void eatGrassBonus()
+	{
+		hunger += 24000;
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import TFC.Reference;
 import TFC.TFCBlocks;
 import TFC.TFCItems;
 import TFC.Blocks.BlockTerraContainer;
+import TFC.TileEntities.TileEntityFoodPrep;
 import TFC.TileEntities.TileEntityPottery;
 
 public class BlockPottery extends BlockTerraContainer
@@ -45,18 +46,18 @@ public class BlockPottery extends BlockTerraContainer
 	{
 		return Straw;
 	}
-	
+
 	@Override
 	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
-    {
+	{
 		if(side == ForgeDirection.UP)
 		{
 			return true;
 		}
 		return false;
-    }
+	}
 
-   @Override
+	@Override
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
@@ -78,17 +79,20 @@ public class BlockPottery extends BlockTerraContainer
 				if(world.getBlockMetadata(x, y, z) < 15)
 				{
 					if(player.capabilities.isCreativeMode)
+					{
 						world.setBlockMetadataWithNotify(x, y, z, 15, 2);
-					else
+					} else
+					{
 						world.setBlockMetadataWithNotify(x, y, z, meta+1, 2);
-					
+					}
+
 					player.inventory.decrStackSize(player.inventory.currentItem, 1);
 					return true;
 				}
 			}
 			else
 			{
-				if(side == 1)
+				if(side == 1 && player.isSneaking())
 				{
 					int offset = 0;
 					/*if(world.getBlockId(x, y, z) != TFCBlocks.Pottery.blockID)
@@ -96,9 +100,9 @@ public class BlockPottery extends BlockTerraContainer
 						world.setBlock(x, y+1, z, TFCBlocks.Pottery.blockID);
 						offset = 1;
 					}*/
-					
+
 					TileEntityPottery te = (TileEntityPottery) world.getBlockTileEntity(x, y+offset, z);
-					
+
 					if(hitX < 0.5 && hitZ < 0.5)
 					{
 						te.ejectItem(0);
@@ -158,5 +162,19 @@ public class BlockPottery extends BlockTerraContainer
 	public TileEntity createNewTileEntity(World var1) {
 		// TODO Auto-generated method stub
 		return new TileEntityPottery();
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int i, int j, int k, int id)
+	{
+		if(!world.isRemote)
+		{
+			if(!world.isBlockOpaqueCube(i, j-1, k))
+			{
+				((TileEntityPottery)world.getBlockTileEntity(i, j, k)).ejectContents();
+				world.setBlock(i, j, k, 0);
+				return;
+			}
+		}
 	}
 }

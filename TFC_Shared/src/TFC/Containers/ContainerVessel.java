@@ -1,14 +1,18 @@
 package TFC.Containers;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import TFC.TFCItems;
 import TFC.Containers.Slots.SlotForShowOnly;
 import TFC.Containers.Slots.SlotSizeSmallVessel;
 
@@ -17,10 +21,11 @@ public class ContainerVessel extends ContainerTFC {
 	private int posX;
 	private int posY;
 	private int posZ;
-	private EntityPlayer player;
 	public InventoryCrafting containerInv = new InventoryCrafting(this, 2, 2);
-
-	public int bagsSlotNum = 0;
+	private ItemStack bagStack = null;
+	
+	ArrayList exceptions;
+	
 
 	public ContainerVessel(InventoryPlayer playerinv, World world, int x, int y, int z) {
 		this.player = playerinv.player;
@@ -29,12 +34,40 @@ public class ContainerVessel extends ContainerTFC {
 		this.posY = y;
 		this.posZ = z;
 		bagsSlotNum = player.inventory.currentItem;
+		bagStack = player.inventory.getCurrentItem();
+		exceptions = new ArrayList<Item>();
+		exceptions.add(TFCItems.BismuthIngot);
+		exceptions.add(TFCItems.BismuthBronzeIngot);
+		exceptions.add(TFCItems.BlackBronzeIngot);
+		exceptions.add(TFCItems.BlackSteelIngot);
+		exceptions.add(TFCItems.BlueSteelIngot);
+		exceptions.add(TFCItems.BrassIngot);
+		exceptions.add(TFCItems.BronzeIngot);
+		exceptions.add(TFCItems.CopperIngot);
+		exceptions.add(TFCItems.GoldIngot);
+		exceptions.add(TFCItems.WroughtIronIngot);
+		exceptions.add(TFCItems.LeadIngot);
+		exceptions.add(TFCItems.NickelIngot);
+		exceptions.add(TFCItems.PigIronIngot);
+		exceptions.add(TFCItems.PlatinumIngot);
+		exceptions.add(TFCItems.RedSteelIngot);
+		exceptions.add(TFCItems.RoseGoldIngot);
+		exceptions.add(TFCItems.SilverIngot);
+		exceptions.add(TFCItems.SteelIngot);
+		exceptions.add(TFCItems.BismuthIngot);
+		exceptions.add(TFCItems.SterlingSilverIngot);
+		exceptions.add(TFCItems.TinIngot);
+		exceptions.add(TFCItems.ZincIngot);
+		
+		
+
 		layoutContainer(playerinv, 0, 0);
 
 		if(!world.isRemote)
 		{
 			loadBagInventory();
 		}
+		this.doItemSaving = true;
 	}
 
 	public void loadBagInventory()
@@ -43,7 +76,7 @@ public class ContainerVessel extends ContainerTFC {
 				player.inventory.getStackInSlot(bagsSlotNum).hasTagCompound())
 		{
 			NBTTagList nbttaglist = player.inventory.getStackInSlot(bagsSlotNum).getTagCompound().getTagList("Items");
-
+			this.isLoading = true;
 			for(int i = 0; i < nbttaglist.tagCount(); i++)
 			{
 				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
@@ -62,29 +95,36 @@ public class ContainerVessel extends ContainerTFC {
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
-		if (!this.world.isRemote)
-		{
-			NBTTagList nbttaglist = new NBTTagList();
-			for(int i = 0; i < containerInv.getSizeInventory(); i++)
-			{
-				if(containerInv.getStackInSlot(i) != null)
-				{
-					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-					nbttagcompound1.setByte("Slot", (byte)i);
-					containerInv.getStackInSlot(i).writeToNBT(nbttagcompound1);
-					nbttaglist.appendTag(nbttagcompound1);
-				}
-			}
-			if(player.inventory.getStackInSlot(bagsSlotNum) != null)
-			{
-				if(!player.inventory.getStackInSlot(bagsSlotNum).hasTagCompound()) {
-					player.inventory.getStackInSlot(bagsSlotNum).setTagCompound(new NBTTagCompound());
-				}
-				player.inventory.getStackInSlot(bagsSlotNum).getTagCompound().setTag("Items", nbttaglist);
+		/*if(ContainerTFC.areItemStacksEqual(bagStack, player.inventory.getCurrentItem())) {
+			saveContents(player.inventory.getStackInSlot(bagsSlotNum));
+		}*/
+	}
 
+	@Override
+	public void saveContents(ItemStack is) 
+	{
+		NBTTagList nbttaglist = new NBTTagList();
+		for(int i = 0; i < containerInv.getSizeInventory(); i++)
+		{
+			if(containerInv.getStackInSlot(i) != null)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte)i);
+				containerInv.getStackInSlot(i).writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
+		if(is != null)
+		{
+			if(!is.hasTagCompound()) {
+				is.setTagCompound(new NBTTagCompound());
+			}
+			is.getTagCompound().setTag("Items", nbttaglist);
+
+		}
 	}
+
+
 
 	@Override
 	public boolean canInteractWith(EntityPlayer var1) {
@@ -93,10 +133,10 @@ public class ContainerVessel extends ContainerTFC {
 
 	protected void layoutContainer(IInventory playerInventory, int xSize, int ySize) {
 
-		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 0, 71, 25));
-		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 1, 89, 25));
-		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 2, 71, 43));
-		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 3, 89, 43));
+		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 0, 71, 25).addItemException(exceptions));
+		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 1, 89, 25).addItemException(exceptions));
+		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 2, 71, 43).addItemException(exceptions));
+		this.addSlotToContainer(new SlotSizeSmallVessel(containerInv, 3, 89, 43).addItemException(exceptions));
 
 		int row;
 		int col;

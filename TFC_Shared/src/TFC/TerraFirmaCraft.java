@@ -15,7 +15,6 @@ import net.minecraftforge.liquids.LiquidDictionary;
 import TFC.API.TFCOptions;
 import TFC.API.Constant.TFCBlockID;
 import TFC.API.Constant.TFCItemID;
-import TFC.API.Util.Localization;
 import TFC.Commands.GetBioTempCommand;
 import TFC.Commands.GetBodyTemp;
 import TFC.Commands.GetRocksCommand;
@@ -26,6 +25,7 @@ import TFC.Core.Recipes;
 import TFC.Core.TFC_Climate;
 import TFC.Core.TFC_ItemHeat;
 import TFC.Core.Player.PlayerTracker;
+import TFC.Core.Util.Localization;
 import TFC.Food.TFCPotion;
 import TFC.Handlers.AnvilCraftingHandler;
 import TFC.Handlers.ChatListenerTFC;
@@ -90,13 +90,26 @@ public class TerraFirmaCraft
 		TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
 		TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
 
-		//Load Blocks
-		TFCBlockID.Setup();
+		//Load IDs
+		Configuration config;
+		try
+		{
+			config = new net.minecraftforge.common.Configuration(
+					new File(TerraFirmaCraft.proxy.getMinecraftDir(), "/config/TFC.cfg"));
+			config.load();
+			TFCBlockID.Setup(config);
+			TFCItemID.Setup(config);
+			config.save();
+		} 
+		catch (Exception e) 
+		{
+			System.out.println(new StringBuilder().append("[TFC] Error while trying to access item configuration!").toString());
+		}
+
 		TFCBlocks.LoadBlocks();
 		TFCBlocks.RegisterBlocks();
 
 		//Load Items
-		TFCItemID.Setup();
 		TFCItems.Setup();
 
 		//Register Generators
@@ -255,6 +268,7 @@ public class TerraFirmaCraft
 		TFCOptions.enableInnerGrassFix = TFCOptions.getBooleanFor(config,"General","enableInnerGrassFix",true, "Set this to false if your computer has to run in fast mode and you get lag. This setting forces the sides of grass to render when viewing from the inside.");
 		TFCOptions.enableDebugMode = TFCOptions.getBooleanFor(config,"General","enableDebugMode",false, "Set this to true if you want to turn on debug mode which is useful for bug hunting");
 		TFCOptions.yearLength = TFCOptions.getIntFor(config,"General","yearLength",96, "This is how many days are in a year. Keep this to multiples of 12.");
+		TFCOptions.iDontLikeOnions = TFCOptions.getBooleanFor(config, "General", "enableNotOnions", false,"Set this to true if you don't like onions.");
 		//Caveins
 		TFCOptions.minimumRockLoad = TFCOptions.getIntFor(config,"Cavein Options","minimumRockLoad",1, "This is the minimum number of solid blocks that must be over a section in order for it to collapse.");
 		TFCOptions.initialCollapseRatio = TFCOptions.getIntFor(config,"Cavein Options","initialCollapseRatio",40, "This number is a 1 in X chance that when you mine a block, a collapse will occur.");

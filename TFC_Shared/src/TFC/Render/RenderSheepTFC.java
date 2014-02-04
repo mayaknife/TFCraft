@@ -9,16 +9,15 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import TFC.Reference;
 import TFC.API.Entities.IAnimal;
 import TFC.Core.TFC_Core;
-import TFC.Entities.Mobs.EntityChickenTFC;
-import TFC.Entities.Mobs.EntityCowTFC;
 import TFC.Entities.Mobs.EntitySheepTFC;
 
 public class RenderSheepTFC extends RenderSheep
 {
 	private static final ResourceLocation SheepFurTexture = new ResourceLocation("textures/entity/sheep/sheep_fur.png");
-	private static final ResourceLocation SheepTexture = new ResourceLocation("textures/entity/sheep/sheep.png");
+	private static final ResourceLocation SheepTexture = new ResourceLocation(Reference.ModID, "mob/sheep.png");
 
 	public RenderSheepTFC(ModelBase par1ModelBase, ModelBase par2ModelBase, float par3)
 	{
@@ -30,7 +29,7 @@ public class RenderSheepTFC extends RenderSheep
 	{
 		if (par2 == 0 && !par1EntitySheep.getSheared())
 		{
-			this.func_110776_a(SheepFurTexture);
+			this.bindTexture(SheepFurTexture);
 			float var4 = 1.0F;
 			int var5 = par1EntitySheep.getFleeceColor();
 			GL11.glColor3f(var4 * EntitySheepTFC.fleeceColorTable[var5][0], var4 * EntitySheepTFC.fleeceColorTable[var5][1], var4 * EntitySheepTFC.fleeceColorTable[var5][2]);
@@ -46,16 +45,16 @@ public class RenderSheepTFC extends RenderSheep
 	{
 		return SheepTexture;
 	}
-	
-	@Override
-	protected void preRenderCallback(EntityLivingBase par1EntityLivingBase, float par2)
-    {
-		float scale = (((EntitySheepTFC)par1EntityLivingBase).size_mod/2)+0.5f;
-		GL11.glScalef(scale, scale, scale);
-    }
 
 	@Override
-	protected ResourceLocation func_110775_a(Entity par1Entity)
+	protected void preRenderCallback(EntityLivingBase par1EntityLivingBase, float par2)
+	{
+		float scale = (((EntitySheepTFC)par1EntityLivingBase).size_mod/2)+0.5f;
+		GL11.glScalef(scale, scale, scale);
+	}
+
+	@Override
+	protected ResourceLocation getEntityTexture(Entity par1Entity)
 	{
 		return this.getTexture((EntitySheep)par1Entity);
 	}

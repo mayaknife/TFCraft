@@ -20,6 +20,7 @@ import TFC.Core.TFC_Core;
 import TFC.Core.TFC_Time;
 import TFC.Entities.AI.AIEatGrass;
 import TFC.Entities.AI.EntityAIMateTFC;
+import TFC.Items.Tools.ItemCustomKnife;
 
 public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 {
@@ -37,7 +38,7 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 	/** The eat grass AI task for this mob. */
 	public AIEatGrass aiEatGrass = new AIEatGrass(this);
 
-	int degreeOfDiversion = 4;
+	int degreeOfDiversion = 2;
 
 	protected long animalID;
 	protected int sex = 0;
@@ -54,10 +55,13 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 	{
 		super(par1World);
 		this.setSize(0.9F, 1.3F);
-		float var2 = 0.23F;
 		this.getNavigator().setAvoidsWater(true);
-		this.tasks.addTask(2, new EntityAIMateTFC(this,worldObj, var2));
+		this.tasks.addTask(2, new EntityAIMateTFC(this,worldObj, 1.0f));
 		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.WheatGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.RyeGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.RiceGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.BarleyGrain.itemID, false));
+		this.tasks.addTask(3, new EntityAITempt(this, 1.2F, TFCItems.OatGrain.itemID, false));
 		this.tasks.addTask(6, this.aiEatGrass);
 
 		hunger = 168000;
@@ -67,7 +71,7 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 		timeOfConception = 0;
 		mateSizeMod = 0;
 		sex = rand.nextInt(2);
-		size_mod = (((rand.nextInt (degreeOfDiversion+1)*(rand.nextBoolean()?1:-1)) / 10f) + 1F) * (1.0F - 0.1F * sex);
+		size_mod = (((rand.nextInt (degreeOfDiversion+1)*10*(rand.nextBoolean()?1:-1)) / 100f) + 1F) * (1.0F - 0.1F * sex);
 
 		//	We hijack the growingAge to hold the day of birth rather
 		//	than number of ticks to next growth event. We want spawned
@@ -84,7 +88,7 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 		this.posX = ((EntityLivingBase)mother).posX;
 		this.posY = ((EntityLivingBase)mother).posY;
 		this.posZ = ((EntityLivingBase)mother).posZ;
-		size_mod = (((rand.nextInt (degreeOfDiversion+1)*(rand.nextBoolean()?1:-1)) / 10f) + 1F) * (1.0F - 0.1F * sex) * (float)Math.sqrt((mother.getSize() + F_size)/1.9F);
+		size_mod = (((rand.nextInt (degreeOfDiversion+1)*10*(rand.nextBoolean()?1:-1)) / 100f) + 1F) * (1.0F - 0.1F * sex) * (float)Math.sqrt((mother.getSize() + F_size)/1.9F);
 		size_mod = Math.min(Math.max(size_mod, 0.7F),1.3f);
 
 		//	We hijack the growingAge to hold the day of birth rather
@@ -103,10 +107,10 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 	}
 
 	@Override
-	protected void func_110147_ax()
+	protected void applyEntityAttributes()
 	{
-		super.func_110147_ax();
-		this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(400);//MaxHealth
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(400);//MaxHealth
 	}
 
 	@Override
@@ -184,7 +188,7 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 		super.onLivingUpdate();
 		TFC_Core.PreventEntityDataUpdate = false;
 
-		if (hunger > 144000 && rand.nextInt (100) == 0 && func_110143_aJ() < TFC_Core.getEntityMaxHealth(this) && !isDead)
+		if (hunger > 144000 && rand.nextInt (100) == 0 && getHealth() < TFC_Core.getEntityMaxHealth(this) && !isDead)
 		{
 			this.heal(1);
 		}
@@ -200,7 +204,7 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 			}
 			else{
 				sex = this.dataWatcher.getWatchableObjectInt(13);
-				size_mod = this.dataWatcher.func_111145_d(14);
+				size_mod = this.dataWatcher.getWatchableObjectFloat(14);
 			}
 		}
 	}
@@ -263,13 +267,13 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 				par1EntityPlayer.addChatMessage("Pregnant");
 			}
 			//par1EntityPlayer.addChatMessage("12: "+dataWatcher.getWatchableObjectInt(12)+", 15: "+dataWatcher.getWatchableObjectInt(15));
-		}
-		if(getGender() == GenderEnum.FEMALE && isAdult() && hasMilkTime < TFC_Time.getTotalTicks()){
-			ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
-			if (var2 != null && var2.itemID == TFCItems.WoodenBucketEmpty.itemID) {
-				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, new ItemStack(TFCItems.WoodenBucketMilk));
-				hasMilkTime = TFC_Time.getTotalTicks() + (3*TFC_Time.dayLength); //Can be milked ones every 3 days
-				return true;
+
+			if(par1EntityPlayer.getHeldItem()!=null&&par1EntityPlayer.getHeldItem().getItem() instanceof ItemCustomKnife && !getSheared() && getPercentGrown(this) > 0.95F){
+				setSheared(true);
+				this.entityDropItem(new ItemStack(TFCItems.Wool,1), 0.0F);
+				if(!par1EntityPlayer.capabilities.isCreativeMode){
+					par1EntityPlayer.getHeldItem().damageItem(1, par1EntityPlayer);
+				}
 			}
 		}
 		return super.interact(par1EntityPlayer);
@@ -323,7 +327,7 @@ public class EntitySheepTFC extends EntitySheep implements IShearable, IAnimal
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		setSheared(true);
 
-		ret.add(new ItemStack(TFCItems.Wool.itemID, 1, getFleeceColor()));
+		ret.add(new ItemStack(TFCItems.Wool.itemID, 2, getFleeceColor()));
 
 		this.worldObj.playSoundAtEntity(this, "mob.sheep.shear", 1.0F, 1.0F);
 		return ret;

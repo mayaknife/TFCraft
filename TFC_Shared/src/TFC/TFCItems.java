@@ -12,12 +12,14 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.EnumHelper;
 import TFC.API.Armor;
 import TFC.API.Metal;
-import TFC.API.TFCTabs;
+import TFC.API.TFCOptions;
 import TFC.API.Constant.Global;
 import TFC.API.Constant.TFCItemID;
 import TFC.API.Enums.EnumDamageType;
 import TFC.API.Enums.EnumSize;
+import TFC.API.Enums.EnumWeight;
 import TFC.Core.Recipes;
+import TFC.Core.TFCTabs;
 import TFC.Core.Metal.Alloy;
 import TFC.Core.Metal.AlloyManager;
 import TFC.Core.Metal.MetalRegistry;
@@ -675,6 +677,7 @@ public class TFCItems
 	public static Item Plum;
 	public static Item Egg;
 	public static Item EggCooked;
+	public static Item Cheese;
 
 	public static Item WheatGrain;
 	public static Item BarleyGrain;
@@ -796,6 +799,7 @@ public class TFCItems
 	public static Item StoneBrick;
 	public static Item Mortar;
 	public static Item Limewater;
+	public static Item Vinegar;
 	public static Item Hide;
 	public static Item SoakedHide;
 	public static Item ScrapedHide;
@@ -941,23 +945,22 @@ public class TFCItems
 		Item.itemsList[Item.stick.itemID] = null; Item.itemsList[Item.stick.itemID] = new ItemStick(24).setFull3D().setUnlocalizedName("stick");
 		Item.itemsList[Item.leather.itemID] = null; Item.itemsList[Item.leather.itemID] = new ItemTerra(Item.leather.itemID).setFull3D().setUnlocalizedName("leather");
 		Item.itemsList[Block.vine.blockID] = new ItemColored(Block.vine.blockID - 256, false);
-		Item.itemsList[Item.egg.itemID] = new ItemTerra(88).setSize(EnumSize.SMALL).setUnlocalizedName("egg").func_111206_d("egg");
+		Item.itemsList[Item.egg.itemID] = new ItemTerra(88).setSize(EnumSize.SMALL).setUnlocalizedName("egg").setTextureName("egg");
 
-		minecartCrate = (new ItemCustomMinecart(TFCItemID.minecartCrate, 1)).setUnlocalizedName("minecartChest").func_111206_d("minecart_chest");
+		minecartCrate = (new ItemCustomMinecart(TFCItemID.minecartCrate, 1)).setUnlocalizedName("minecartChest").setTextureName("minecart_chest");
 
-		Item.itemsList[Item.bow.itemID] = null; Item.itemsList[Item.bow.itemID] = (new ItemCustomBow(5)).setUnlocalizedName("bow").func_111206_d("bow");
-		Item.itemsList[63+256] = null; Item.itemsList[63+256] = new ItemTerra(63).setUnlocalizedName("porkchopRaw");
-		Item.itemsList[64+256] = null; Item.itemsList[64+256] = new ItemTerraFood(64, 35, 0.8F, true, 38).setFolder("").setUnlocalizedName("porkchopCooked");
-		Item.itemsList[93+256] = null; Item.itemsList[93+256] = new ItemTerra(93).setUnlocalizedName("fishRaw");
-		Item.itemsList[94+256] = null; Item.itemsList[94+256] = new ItemTerraFood(94, 30, 0.6F, true, 39).setFolder("").setUnlocalizedName("fishCooked");
-		Item.itemsList[107+256] = null; Item.itemsList[107+256] = new ItemTerra(107).setUnlocalizedName("beefRaw");
-		Item.itemsList[108+256] = null; Item.itemsList[108+256] = new ItemTerraFood(108, 40, 0.8F, true, 40).setFolder("").setUnlocalizedName("beefCooked");
-		Item.itemsList[109+256] = null; Item.itemsList[109+256] = new ItemTerra(109).setUnlocalizedName("chickenRaw");
-		Item.itemsList[110+256] = null; Item.itemsList[110+256] = new ItemTerraFood(110, 35, 0.6F, true, 41).setFolder("").setUnlocalizedName("chickenCooked");
+		Item.itemsList[Item.bow.itemID] = null; Item.itemsList[Item.bow.itemID] = (new ItemCustomBow(5)).setUnlocalizedName("bow").setTextureName("bow");
+		Item.itemsList[Item.porkRaw.itemID] = null; Item.itemsList[Item.porkRaw.itemID] = new ItemTerra(63).setUnlocalizedName("porkchopRaw");
+		Item.itemsList[Item.porkCooked.itemID] = null; Item.itemsList[Item.porkCooked.itemID] = new ItemTerraFood(64, 35, 0.8F, true, 38).setFolder("").setUnlocalizedName("porkchopCooked");
+		Item.itemsList[Item.fishRaw.itemID] = null; Item.itemsList[Item.fishRaw.itemID] = new ItemTerra(93).setUnlocalizedName("fishRaw");
+		Item.itemsList[Item.fishCooked.itemID] = null; Item.itemsList[Item.fishCooked.itemID] = new ItemTerraFood(94, 30, 0.6F, true, 39).setFolder("").setUnlocalizedName("fishCooked");
+		Item.itemsList[Item.beefRaw.itemID] = null; Item.itemsList[Item.beefRaw.itemID] = new ItemTerra(107).setUnlocalizedName("beefRaw");
+		Item.itemsList[Item.beefCooked.itemID] = null; Item.itemsList[Item.beefCooked.itemID] = new ItemTerraFood(108, 40, 0.8F, true, 40).setFolder("").setUnlocalizedName("beefCooked");
+		Item.itemsList[Item.chickenRaw.itemID] = null; Item.itemsList[Item.chickenRaw.itemID] = new ItemTerra(109).setUnlocalizedName("chickenRaw");
+		Item.itemsList[Item.chickenCooked.itemID] = null; Item.itemsList[Item.chickenCooked.itemID] = new ItemTerraFood(110, 35, 0.6F, true, 41).setFolder("").setUnlocalizedName("chickenCooked");
 		//Item.itemsList[41+256] = null; Item.itemsList[41+256] = (new ItemTerraFood(41, 25, 0.6F, false, 42)).setFolder("").setUnlocalizedName("bread");
-		Item.itemsList[88+256] = null; Item.itemsList[88+256] = (new ItemTerra(88)).setUnlocalizedName("egg");
-		Item.itemsList[Item.dyePowder.itemID] = null; Item.itemsList[Item.dyePowder.itemID] = new ItemDyeCustom(95).setUnlocalizedName("dyePowder").func_111206_d("dye_powder");
-		Item.itemsList[Item.potion.itemID] = null; Item.itemsList[Item.potion.itemID] = (new ItemCustomPotion(117)).setUnlocalizedName("potion").func_111206_d("potion");
+		Item.itemsList[Item.dyePowder.itemID] = null; Item.itemsList[Item.dyePowder.itemID] = new ItemDyeCustom(95).setUnlocalizedName("dyePowder").setTextureName("dye_powder");
+		Item.itemsList[Item.potion.itemID] = null; Item.itemsList[Item.potion.itemID] = (new ItemCustomPotion(117)).setUnlocalizedName("potion").setTextureName("potion");
 
 		Item.itemsList[Block.tallGrass.blockID] = null; Item.itemsList[Block.tallGrass.blockID] = (new ItemColored(Block.tallGrass.blockID - 256, true)).setBlockNames(new String[] {"shrub", "grass", "fern"});
 
@@ -1405,8 +1408,8 @@ public class TFCItems
 		BlueSteelBucketEmpty = (new ItemCustomBlueSteelBucket(TFCItemID.BlueSteelBucketEmpty, 0)).setUnlocalizedName("Blue Steel Bucket Empty");
 		BlueSteelBucketLava = (new ItemCustomBlueSteelBucket(TFCItemID.BlueSteelBucketLava, Block.lavaMoving.blockID)).setUnlocalizedName("Blue Steel Bucket Lava").setContainerItem(BlueSteelBucketEmpty);
 
-		Quern = new ItemTerra(TFCItemID.Quern).setUnlocalizedName("Quern").setMaxDamage(250);
-		FlintSteel = new ItemFlintSteel(TFCItemID.FlintSteel).setUnlocalizedName("flintAndSteel").setMaxDamage(200).func_111206_d("flint_and_steel");
+		Quern = ((ItemTerra) new ItemTerra(TFCItemID.Quern).setUnlocalizedName("Quern").setMaxDamage(250)).setSize(EnumSize.MEDIUM).setWeight(EnumWeight.HEAVY);
+		FlintSteel = new ItemFlintSteel(TFCItemID.FlintSteel).setUnlocalizedName("flintAndSteel").setMaxDamage(200).setTextureName("flint_and_steel");
 
 		DoorOak = new ItemWoodDoor(TFCItemID.DoorOak, 0).setUnlocalizedName("Oak Door");
 		DoorAspen = new ItemWoodDoor(TFCItemID.DoorAspen, 1).setUnlocalizedName("Aspen Door");
@@ -1435,7 +1438,7 @@ public class TFCItems
 
 		Blueprint = new ItemBlueprint(TFCItemID.Blueprint);
 		writabeBookTFC = new ItemWritableBookTFC(TFCItemID.WritableBookTFC,"Fix Me I'm Broken").setUnlocalizedName("book");
-		WoolYarn = new ItemTerra(TFCItemID.WoolYarn).setUnlocalizedName("WoolYarn").setCreativeTab(TFCTabs.TFCMaterials);
+		WoolYarn = new ItemTerra(TFCItemID.WoolYarn).setUnlocalizedName("WoolYarn");
 		Wool = new ItemTerra(TFCItemID.Wool).setUnlocalizedName("Wool").setCreativeTab(TFCTabs.TFCMaterials);
 		WoolCloth = new ItemTerra(TFCItemID.WoolCloth).setUnlocalizedName("WoolCloth").setCreativeTab(TFCTabs.TFCMaterials);
 		Spindle = new ItemSpindle(TFCItemID.Spindle).setUnlocalizedName("Spindle").setCreativeTab(TFCTabs.TFCMaterials);
@@ -1444,6 +1447,7 @@ public class TFCItems
 		StoneBrick = (new ItemStoneBrick(TFCItemID.ItemStoneBrick2).setFolder("tools/").setUnlocalizedName("ItemStoneBrick"));
 		Mortar = new ItemTerra(TFCItemID.Mortar).setFolder("tools/").setUnlocalizedName("Mortar").setCreativeTab(TFCTabs.TFCMaterials);
 		Limewater = new ItemCustomBucket(TFCItemID.Limewater,2).setFolder("tools/").setUnlocalizedName("Lime Water").setContainerItem(WoodenBucketEmpty).setCreativeTab(TFCTabs.TFCMaterials);
+		Vinegar = new ItemCustomBucket(TFCItemID.Vinegar,2).setFolder("food/").setUnlocalizedName("Vinegar").setContainerItem(WoodenBucketEmpty).setCreativeTab(TFCTabs.TFCMaterials);
 		Hide = new ItemTerra(TFCItemID.Hide).setFolder("tools/").setUnlocalizedName("Hide").setCreativeTab(TFCTabs.TFCMaterials);
 		SoakedHide = new ItemTerra(TFCItemID.SoakedHide).setFolder("tools/").setUnlocalizedName("Soaked Hide").setCreativeTab(TFCTabs.TFCMaterials);
 		ScrapedHide = new ItemTerra(TFCItemID.ScrapedHide).setFolder("tools/").setUnlocalizedName("Scraped Hide").setCreativeTab(TFCTabs.TFCMaterials);
@@ -1453,7 +1457,7 @@ public class TFCItems
 		muttonRaw = new ItemTerra(TFCItemID.muttonRaw).setFolder("food/").setUnlocalizedName("Mutton Raw");
 		muttonCooked =  new ItemTerraFood(TFCItemID.muttonCooked, 40, 0.8F, true, 48).setUnlocalizedName("Mutton Cooked");
 		FlatLeather = (new ItemFlatGeneric(TFCItemID.FlatLeather2).setFolder("tools/").setUnlocalizedName("Flat Leather"));
-		TerraLeather = new ItemLeather(TFCItemID.TFCLeather).setSpecialCraftingType(FlatLeather).setFolder("tools/").setUnlocalizedName("TFC Leather").setCreativeTab(TFCTabs.TFCMaterials);
+		TerraLeather = new ItemLeather(TFCItemID.TFCLeather).setSpecialCraftingType(FlatLeather).setFolder("tools/").setUnlocalizedName("TFC Leather");
 
 		Straw = new ItemTerra(TFCItemID.Straw).setFolder("plants/").setUnlocalizedName("Straw");
 		FlatClay = (new ItemFlatGeneric(TFCItemID.FlatClay).setFolder("pottery/").setMetaNames(new String[]{"clay flat light", "clay flat dark", "clay flat fire", "clay flat dark fire"}).setUnlocalizedName(""));
@@ -1463,7 +1467,7 @@ public class TFCItems
 		PotteryLargeVessel = new ItemPotteryLargeVessel(TFCItemID.PotteryLargeVessel).setUnlocalizedName("Large Vessel");
 		PotteryPot = new ItemPotteryPot(TFCItemID.PotteryPot).setUnlocalizedName("Pot");
 		CeramicMold = new ItemPotteryBase(TFCItemID.CeramicMold).setMetaNames(new String[]{"Clay Mold","Ceramic Mold"}).setUnlocalizedName("Mold");
-		Item.itemsList[Item.clay.itemID] = null; Item.itemsList[Item.clay.itemID] = (new ItemClay(Item.clay.itemID).setSpecialCraftingType(FlatClay, new ItemStack(FlatClay, 1, 1))).setMetaNames(new String[]{"Clay", "Fire Clay"}).setUnlocalizedName("clay").setCreativeTab(CreativeTabs.tabMaterials);
+		Item.itemsList[Item.clay.itemID] = null; Item.itemsList[Item.clay.itemID] = (new ItemClay(Item.clay.itemID).setSpecialCraftingType(FlatClay, new ItemStack(FlatClay, 1, 1))).setMetaNames(new String[]{"Clay", "Fire Clay"}).setUnlocalizedName("clay");
 		ClayMoldAxe = new ItemPotteryMold(TFCItemID.ClayMoldAxe).setMetaNames(new String[]{"Clay Mold Axe","Ceramic Mold Axe",
 				"Ceramic Mold Axe Copper","Ceramic Mold Axe Bronze","Ceramic Mold Axe Bismuth Bronze","Ceramic Mold Axe Black Bronze"}).setUnlocalizedName("Axe Mold");
 		ClayMoldChisel = new ItemPotteryMold(TFCItemID.ClayMoldChisel).setMetaNames(new String[]{"Clay Mold Chisel","Ceramic Mold Chisel",
@@ -1549,7 +1553,7 @@ public class TFCItems
 		MaizeEar = new ItemTerraFood(TFCItemID.MaizeEar, 10, 0.4F, false, 22).setUnlocalizedName("Maize Ear");
 		Tomato = new ItemTerraFood(TFCItemID.Tomato, 15, 0.4F, false, 24).setUnlocalizedName("Tomato");
 		Potato = new ItemTerraFood(TFCItemID.Potato, 22, 0.4F, false, 25).setUnlocalizedName("Potato");
-		Onion = new ItemTerraFood(TFCItemID.Onion, 10, 0.4F, false, 27).setUnlocalizedName("Onion");
+		Onion = new ItemTerraFood(TFCItemID.Onion, 10, 0.4F, false, 27).setUnlocalizedName(TFCOptions.iDontLikeOnions?"Rutabaga":"Onion");
 		Cabbage = new ItemTerraFood(TFCItemID.Cabbage, 20, 0.4F, false, 28).setUnlocalizedName("Cabbage");
 		Garlic = new ItemTerraFood(TFCItemID.Garlic, 10, 0.4F, false, 29).setUnlocalizedName("Garlic");
 		Carrot = new ItemTerraFood(TFCItemID.Carrot, 5, 0.4F, false, 30).setUnlocalizedName("Carrot");
@@ -1561,6 +1565,7 @@ public class TFCItems
 		YellowBellPepper = new ItemTerraFood(TFCItemID.YellowBellPepper, 10, 0.4F, false, 35).setUnlocalizedName("Yellow Bell Pepper");
 		RedBellPepper = new ItemTerraFood(TFCItemID.RedBellPepper, 10, 0.4F, false, 36).setUnlocalizedName("Red Bell Pepper");
 		Squash = new ItemTerraFood(TFCItemID.Squash, 12, 0.4F, false, 37).setUnlocalizedName("Squash");
+		Cheese = new ItemTerraFood(TFCItemID.Cheese, 20, 0.6F, false, 50).setUnlocalizedName("Cheese");
 
 		WheatWhole = new ItemTerra(TFCItemID.WheatWhole).setFolder("food/").setUnlocalizedName("Wheat Whole");
 		BarleyWhole = new ItemTerra(TFCItemID.BarleyWhole).setFolder("food/").setUnlocalizedName("Barley Whole");
@@ -1609,7 +1614,7 @@ public class TFCItems
 		SeedsRice = new ItemCustomSeeds(TFCItemID.SeedsRice,11).setUnlocalizedName("Seeds Rice");
 		SeedsMaize = new ItemCustomSeeds(TFCItemID.SeedsMaize,2).setUnlocalizedName("Seeds Maize");
 		SeedsPotato = new ItemCustomSeeds(TFCItemID.SeedsPotato,13).setUnlocalizedName("Seeds Potato");
-		SeedsOnion = new ItemCustomSeeds(TFCItemID.SeedsOnion,15).setUnlocalizedName("Seeds Onion");
+		SeedsOnion = new ItemCustomSeeds(TFCItemID.SeedsOnion,15).setUnlocalizedName(TFCOptions.iDontLikeOnions?"Seeds Rutabaga":"Seeds Onion");
 		SeedsCabbage = new ItemCustomSeeds(TFCItemID.SeedsCabbage,16).setUnlocalizedName("Seeds Cabbage");
 		SeedsGarlic = new ItemCustomSeeds(TFCItemID.SeedsGarlic,17).setUnlocalizedName("Seeds Garlic");
 		SeedsCarrot = new ItemCustomSeeds(TFCItemID.SeedsCarrot,18).setUnlocalizedName("Seeds Carrot");
@@ -1745,56 +1750,59 @@ public class TFCItems
 		MetalRegistry.instance.addMetal(Global.HCBLUESTEEL, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.UNKNOWN, Alloy.EnumTier.TierI);
 
+		/**
+		 * Added the +-0.01 tolerance to hopefully negate most rounding errors
+		 */
 		Alloy Bronze = new Alloy(Global.BRONZE, Alloy.EnumTier.TierI);
-		Bronze.addIngred(Global.COPPER, 88, 92);
-		Bronze.addIngred(Global.TIN, 8, 12);
+		Bronze.addIngred(Global.COPPER, 87.99f, 92.01f);
+		Bronze.addIngred(Global.TIN, 7.99f, 12.01f);
 		AlloyManager.instance.addAlloy(Bronze);
 
 		Alloy Brass = new Alloy(Global.BRASS, Alloy.EnumTier.TierI);
-		Brass.addIngred(Global.COPPER, 88, 92);
-		Brass.addIngred(Global.ZINC, 8, 12);
+		Brass.addIngred(Global.COPPER, 87.99f, 92.01f);
+		Brass.addIngred(Global.ZINC, 7.99f, 12.01f);
 		AlloyManager.instance.addAlloy(Brass);
 
 		Alloy RoseGold = new Alloy(Global.ROSEGOLD, Alloy.EnumTier.TierI);
-		RoseGold.addIngred(Global.GOLD, 70, 85);
-		RoseGold.addIngred(Global.COPPER, 15, 30);
+		RoseGold.addIngred(Global.GOLD, 69.99f, 85.01f);
+		RoseGold.addIngred(Global.COPPER, 14.99f, 30.01f);
 		AlloyManager.instance.addAlloy(RoseGold);
 
 		Alloy BlackBronze = new Alloy(Global.BLACKBRONZE, Alloy.EnumTier.TierI);
-		BlackBronze.addIngred(Global.GOLD, 10, 25);
-		BlackBronze.addIngred(Global.COPPER, 50, 70);
-		BlackBronze.addIngred(Global.SILVER, 10, 25);
+		BlackBronze.addIngred(Global.GOLD, 9.99f, 25.01f);
+		BlackBronze.addIngred(Global.COPPER, 49.99f, 70.01f);
+		BlackBronze.addIngred(Global.SILVER, 9.99f, 25.01f);
 		AlloyManager.instance.addAlloy(BlackBronze);
 
 		Alloy BismuthBronze = new Alloy(Global.BISMUTHBRONZE, Alloy.EnumTier.TierI);
-		BismuthBronze.addIngred(Global.ZINC, 20, 30);
-		BismuthBronze.addIngred(Global.COPPER, 50, 70);
-		BismuthBronze.addIngred(Global.BISMUTH, 10, 20);
+		BismuthBronze.addIngred(Global.ZINC, 19.99f, 30.01f);
+		BismuthBronze.addIngred(Global.COPPER, 49.99f, 70.01f);
+		BismuthBronze.addIngred(Global.BISMUTH, 9.99f, 20.01f);
 		AlloyManager.instance.addAlloy(BismuthBronze);
 
 		Alloy SterlingSilver = new Alloy(Global.STERLINGSILVER, Alloy.EnumTier.TierI);
-		SterlingSilver.addIngred(Global.SILVER, 60, 80);
-		SterlingSilver.addIngred(Global.COPPER, 20, 40);
+		SterlingSilver.addIngred(Global.SILVER, 59.99f, 80.01f);
+		SterlingSilver.addIngred(Global.COPPER, 19.99f, 40.01f);
 		AlloyManager.instance.addAlloy(SterlingSilver);
 
 		Alloy WeakSteel = new Alloy(Global.WEAKSTEEL, Alloy.EnumTier.TierIII);
-		WeakSteel.addIngred(Global.STEEL, 50, 70);
-		WeakSteel.addIngred(Global.NICKEL, 15, 25);
-		WeakSteel.addIngred(Global.BLACKBRONZE, 15, 25);
+		WeakSteel.addIngred(Global.STEEL, 49.99f, 70.01f);
+		WeakSteel.addIngred(Global.NICKEL, 14.99f, 25.01f);
+		WeakSteel.addIngred(Global.BLACKBRONZE, 14.99f, 25.01f);
 		AlloyManager.instance.addAlloy(WeakSteel);
 
 		Alloy WeakRedSteel = new Alloy(Global.WEAKREDSTEEL, Alloy.EnumTier.TierIII);
-		WeakRedSteel.addIngred(Global.BLACKSTEEL, 50, 60);
-		WeakRedSteel.addIngred(Global.ROSEGOLD, 10, 15);
-		WeakRedSteel.addIngred(Global.BRASS, 10, 15);
-		WeakRedSteel.addIngred(Global.STEEL, 20, 25);
+		WeakRedSteel.addIngred(Global.BLACKSTEEL, 49.99f, 60.01f);
+		WeakRedSteel.addIngred(Global.ROSEGOLD, 9.99f, 15.01f);
+		WeakRedSteel.addIngred(Global.BRASS, 9.99f, 15.01f);
+		WeakRedSteel.addIngred(Global.STEEL, 19.99f, 25.01f);
 		AlloyManager.instance.addAlloy(WeakRedSteel);
 
 		Alloy WeakBlueSteel = new Alloy(Global.WEAKBLUESTEEL, Alloy.EnumTier.TierIII);
-		WeakBlueSteel.addIngred(Global.BLACKSTEEL, 50, 60);
-		WeakBlueSteel.addIngred(Global.BISMUTHBRONZE, 10, 15);
-		WeakBlueSteel.addIngred(Global.STERLINGSILVER, 10, 15);
-		WeakBlueSteel.addIngred(Global.STEEL, 20, 25);
+		WeakBlueSteel.addIngred(Global.BLACKSTEEL, 49.99f, 60.01f);
+		WeakBlueSteel.addIngred(Global.BISMUTHBRONZE, 9.99f, 15.01f);
+		WeakBlueSteel.addIngred(Global.STERLINGSILVER, 9.99f, 15.01f);
+		WeakBlueSteel.addIngred(Global.STEEL, 19.99f, 25.01f);
 		AlloyManager.instance.addAlloy(WeakBlueSteel);
 	}
 
@@ -1940,10 +1948,10 @@ public class TFCItems
 		TFCItems.SilverSheet2x = 			new ItemMetalSheet2x(TFCItemID.SilverSheet2x).setUnlocalizedName(NamesNSO[i++]+" Double Sheet");
 		TFCItems.SterlingSilverSheet2x = 	new ItemMetalSheet2x(TFCItemID.SterlingSilverSheet2x).setUnlocalizedName(NamesNSO[i++]+" Double Sheet");
 
-		Item.itemsList[Item.helmetLeather.itemID] = null; Item.itemsList[Item.helmetLeather.itemID] = new ItemTFCArmor(Item.helmetLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 0, EnumArmorMaterial.CLOTH).setUnlocalizedName("helmetCloth").func_111206_d("leather_helmet");
-		Item.itemsList[Item.plateLeather.itemID] = null; Item.itemsList[Item.plateLeather.itemID] = new ItemTFCArmor(Item.plateLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 1, EnumArmorMaterial.CLOTH).setUnlocalizedName("chestplateCloth").func_111206_d("leather_chestplate");
-		Item.itemsList[Item.legsLeather.itemID] = null; Item.itemsList[Item.legsLeather.itemID] = new ItemTFCArmor(Item.legsLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 2, EnumArmorMaterial.CLOTH).setUnlocalizedName("leggingsCloth").func_111206_d("leather_leggings");
-		Item.itemsList[Item.bootsLeather.itemID] = null; Item.itemsList[Item.bootsLeather.itemID] = new ItemTFCArmor(Item.bootsLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 3, EnumArmorMaterial.CLOTH).setUnlocalizedName("bootsCloth").func_111206_d("leather_boots");
+		Item.itemsList[Item.helmetLeather.itemID] = null; Item.itemsList[Item.helmetLeather.itemID] = new ItemTFCArmor(Item.helmetLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 0, EnumArmorMaterial.CLOTH).setUnlocalizedName("helmetCloth").setTextureName("leather_helmet");
+		Item.itemsList[Item.plateLeather.itemID] = null; Item.itemsList[Item.plateLeather.itemID] = new ItemTFCArmor(Item.plateLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 1, EnumArmorMaterial.CLOTH).setUnlocalizedName("chestplateCloth").setTextureName("leather_chestplate");
+		Item.itemsList[Item.legsLeather.itemID] = null; Item.itemsList[Item.legsLeather.itemID] = new ItemTFCArmor(Item.legsLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 2, EnumArmorMaterial.CLOTH).setUnlocalizedName("leggingsCloth").setTextureName("leather_leggings");
+		Item.itemsList[Item.bootsLeather.itemID] = null; Item.itemsList[Item.bootsLeather.itemID] = new ItemTFCArmor(Item.bootsLeather.itemID, Armor.Leather, proxy.getArmorRenderID("leather"), 3, EnumArmorMaterial.CLOTH).setUnlocalizedName("bootsCloth").setTextureName("leather_boots");
 	}
 
 	public static Item[] Meals;
